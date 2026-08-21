@@ -1,31 +1,32 @@
-# Aravinth Portfolio 3.0
+# Aravinth.dev backend setup
 
-Enhanced GitHub Pages portfolio package.
+## Website files
+Replace these files in the GitHub Pages repository:
+- `chess.html`
+- `refer.html`
+- `site.js`
+- `backend-config.js`
 
-### New features
-- Separate **Refer Aravinth** and **Ask Aravinth** pages
-- Mandatory name/email with client-side email format validation
-- Resume/job-description upload UI
-- Google Sheets + Google Drive + email notification backend
-- Permanent random visitor ID and visit-frequency tracking
-- Online/availability indicator for Aravinth owner session
-- Two real checkmate-in-one puzzle boards with legal chess movement
-- Separate challenge room with room ID and move synchronization through the backend
-- Challenge notification to Aravinth
-- Dark/light mode following device preference plus manual toggle
-- Custom cursor on mouse/trackpad
-- Service-worker offline recovery and 404 game page
-- GitHub Actions deployment that injects global site functionality into every existing HTML topic page
-- Responsive design for phone, tablet, laptop, desktop and larger displays
+Replace the backend script:
+- `Backend/Code.gs`
 
-## Upload
+## Google storage
+1. Create a Google Sheet named `Aravinth Portfolio Data` (or any name).
+2. Open **Extensions -> Apps Script**.
+3. Paste `Backend/Code.gs`.
+4. Replace `YOUR_EMAIL@example.com` with the email where you want notifications.
+5. Save.
+6. Run `setup()` once and approve Google permissions.
+7. Deploy -> New deployment -> Web app.
+8. Execute as: **Me**.
+9. Who has access: **Anyone**.
+10. Copy the `/exec` URL.
+11. Put that URL into `backend-config.js` as `backendUrl`.
+12. Commit the changed files to GitHub Pages.
 
-Replace the root files in the GitHub repository with this package's root files and add:
-- `backend/`
-- `.github/workflows/`
+The backend creates Sheets tabs for visitors, events, referrals, questions, feedback, challenges, rooms and moves. Resume files go into a Google Drive folder created by `setup()`.
 
-Keep your existing `topics/` folder and its pages.
+The visitor identifier is used internally for continuity and is not rendered in the public UI.
 
-Then set GitHub Pages source to **GitHub Actions**.
-
-Finally deploy the Google Apps Script backend and put its `/exec` URL into `backend-config.js`.
+## Important
+GitHub Pages itself cannot securely store private form submissions. Keep the Google Apps Script URL public but never put API secrets in frontend files.

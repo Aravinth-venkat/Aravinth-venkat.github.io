@@ -1,35 +1,146 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#06111d"><meta name="description" content="Aravinth V — ServiceNow Developer, Automation, AI Agents, Moveworks and integrations."><title>Critical Checkmate Lab | Aravinth.dev</title><script src="backend-config.js"></script><script src="site.js"></script><style>
-:root{--bg:#06111d;--panel:#0b1b2b;--panel2:#10243a;--text:#f5f8fc;--muted:#a9bacb;--line:#28455f;--cyan:#39d7ff;--violet:#9278ff;--ok:#63e6a6;--bad:#ff718d;--gold:#ffd75e}
-html[data-theme="light"]{--bg:#f3f7fb;--panel:#ffffff;--panel2:#e9f2f8;--text:#0b1724;--muted:#506273;--line:#b9cad8}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 10% 0,#1a527a33,transparent 34%),var(--bg);line-height:1.65;overflow-x:hidden}a{color:inherit}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}.nav{min-height:70px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:21px;font-weight:950;text-decoration:none}.brand span{color:var(--cyan)}.links{display:flex;gap:18px}.links a{color:var(--muted);text-decoration:none;font-size:13px}.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:12px;padding:11px 16px;text-decoration:none;font-weight:900;background:var(--panel);cursor:pointer;color:var(--text)}.primary{border:0;color:#04111d;background:linear-gradient(100deg,var(--cyan),var(--violet))}.article{padding:64px 0 100px;max-width:980px}.eyebrow{color:var(--cyan);font-weight:950;letter-spacing:2px;font-size:12px}.lead{color:var(--muted);font-size:18px}.panel{margin-top:28px;border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:24px;box-shadow:0 20px 60px #0002}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{display:block;text-decoration:none;border:1px solid var(--line);border-radius:20px;padding:22px;background:var(--panel);transition:.25s}.card:hover{transform:translateY(-4px);border-color:var(--cyan)}.card p{color:var(--muted)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:6px}.full{grid-column:1/-1}label{font-size:13px;font-weight:850}input,select,textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:12px;outline:none}textarea{min-height:140px;resize:vertical}.error{color:var(--bad);font-size:13px;min-height:20px}.success{display:none;color:var(--ok);font-weight:850;margin-top:10px}.muted{color:var(--muted)}footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted)}.aravinth-theme-toggle{position:fixed;right:18px;top:84px;z-index:90;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--panel);cursor:pointer}.aravinth-cursor-dot,.aravinth-cursor-ring{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);border-radius:50%}.aravinth-cursor-dot{width:7px;height:7px;background:var(--cyan);box-shadow:0 0 15px var(--cyan)}.aravinth-cursor-ring{width:28px;height:28px;border:1px solid #39d7ff88;transition:width .18s,height .18s,border-color .18s}.aravinth-cursor-ring.hover{width:48px;height:48px;border-color:var(--violet)}@media(pointer:coarse){.aravinth-cursor-dot,.aravinth-cursor-ring{display:none}}@media(max-width:800px){.grid{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.links{display:none}}@media(max-width:520px){.grid{grid-template-columns:1fr}.wrap{width:min(1180px,calc(100% - 24px))}.article{padding-top:45px}}
-</style>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06111d">
+<title>Chess Challenge | Aravinth.dev</title>
+<script src="backend-config.js"></script>
+<script src="site.js"></script>
 <style>
-.chess-wrap{max-width:1100px}.boards{display:grid;grid-template-columns:1fr 1fr;gap:22px}.boardbox{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px}.board{width:min(100%,560px);margin:auto;display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;border:5px solid #4a2b18;box-shadow:0 15px 45px #0005}.sq{border:0;display:grid;place-items:center;font-size:clamp(24px,6vw,48px);cursor:pointer;position:relative}.sq.light{background:#f0d9b5}.sq.dark{background:#b58863}.sq.selected{outline:4px solid #39d7ff;outline-offset:-4px}.sq.target{box-shadow:inset 0 0 0 5px #63e6a6}.piece-white{filter:drop-shadow(0 2px 1px #000);}.piece-black{filter:drop-shadow(0 2px 1px #fff8);}.bar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:12px}.status{color:var(--muted)}.room{display:none;margin-top:18px}.room.open{display:block}.move-list{max-height:130px;overflow:auto;font-size:13px;color:var(--muted);background:var(--bg);padding:10px;border-radius:10px}.online-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#8b97a3}.online-dot.on{background:var(--ok);box-shadow:0 0 12px var(--ok)}@media(max-width:850px){.boards{grid-template-columns:1fr}}
+:root{--bg:#06111d;--panel:#0a1b2b;--line:#24445e;--text:#f5f8fc;--muted:#a9bbcc;--cyan:#35d8ff;--violet:#9b7cff;--ok:#63e6a6;--bad:#ff718d;--cream:#f0d9b5;--green:#769656;--green2:#baca44}
+html[data-theme=light]{--bg:#eef4f8;--panel:#fff;--line:#b8cad8;--text:#102030;--muted:#526576}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#12577b55,transparent 35%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.55}a{color:inherit}.wrap{width:min(1180px,calc(100% - 28px));margin:auto}
+nav{position:sticky;top:0;z-index:20;background:#06111dee;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.nav{min-height:68px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:950;font-size:21px;text-decoration:none}.brand span{color:var(--cyan)}.links{display:flex;gap:17px}.links a{font-size:12px;color:var(--muted);text-decoration:none}
+.article{padding:52px 0 90px}.eyebrow{font-size:12px;letter-spacing:2px;color:var(--cyan);font-weight:900}h1{font-size:clamp(34px,6vw,58px);line-height:1.02;margin:10px 0 14px}.lead{color:var(--muted);font-size:17px;max-width:850px}.boards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:30px}.card{background:linear-gradient(145deg,var(--panel),#071524);border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 20px 55px #0004}.card h2{font-size:19px;margin:0 0 4px}.muted{color:var(--muted);font-size:14px}
+.board-shell{max-width:620px;margin:16px auto 0}.board{display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;border:8px solid #3d2415;border-radius:5px;overflow:hidden;box-shadow:0 18px 45px #0008}.sq{border:0;padding:0;display:grid;place-items:center;position:relative;font-size:clamp(28px,6.5vw,64px);line-height:1;cursor:pointer;user-select:none;touch-action:manipulation}.sq.light{background:var(--cream)}.sq.dark{background:var(--green)}.sq:hover{filter:brightness(1.08)}.sq.selected{box-shadow:inset 0 0 0 5px var(--cyan)}.sq.target{box-shadow:inset 0 0 0 5px var(--ok)}.sq.last{box-shadow:inset 0 0 0 999px #ffd75e35}.piece{font-family:"DejaVu Sans",Arial,sans-serif;text-shadow:0 3px 2px #0008}.white{color:#fff}.black{color:#252525}.coords{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;padding:5px 4px}
+.bar{display:flex;gap:9px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:12px}.btn{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);padding:10px 14px;font-weight:850;cursor:pointer}.primary{border:0;color:#03121c;background:linear-gradient(100deg,var(--cyan),var(--violet))}
+.panel{margin-top:22px;background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:22px}.online{display:inline-flex;align-items:center;gap:8px}.dot{width:10px;height:10px;border-radius:50%;background:#8493a1}.dot.on{background:var(--ok);box-shadow:0 0 12px var(--ok)}.room{display:none;margin-top:20px}.room.open{display:block}.move-list{min-height:44px;max-height:120px;overflow:auto;background:var(--bg);border-radius:12px;padding:10px;color:var(--muted);font-size:13px}
+footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-size:13px}.aravinth-theme-toggle{position:fixed;right:18px;top:82px;z-index:30;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--panel);cursor:pointer}
+.aravinth-cursor-dot,.aravinth-cursor-ring{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);border-radius:50%}.aravinth-cursor-dot{width:7px;height:7px;background:var(--cyan);box-shadow:0 0 15px var(--cyan)}.aravinth-cursor-ring{width:28px;height:28px;border:1px solid #39d7ff88;transition:.18s}.aravinth-cursor-ring.hover{width:48px;height:48px;border-color:var(--violet)}@media(pointer:coarse){.aravinth-cursor-dot,.aravinth-cursor-ring{display:none}}
+@media(max-width:850px){.boards{grid-template-columns:1fr}.links{display:none}}@media(max-width:520px){.wrap{width:calc(100% - 20px)}.article{padding-top:40px}.card{padding:13px}.board{border-width:6px}.panel{padding:16px}}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/chess.js@1.4.0/dist/chess.min.js"></script>
-</head><body><nav><div class="wrap nav"><a class="brand" href="index.html">Aravinth<span>.dev</span></a><div class="links"><a href="index.html">Home</a><a href="index.html#experience">Experience</a><a href="index.html#projects">Projects</a><a href="refer.html">Refer</a><a href="ask.html">Ask</a><a href="chess.html">Challenge</a><a href="feedback.html">Feedback</a></div></div></nav><main class="wrap article chess-wrap"><div class="eyebrow">CRITICAL CHECKMATE LAB</div><h1>Play the board. Then challenge me.</h1><p class="lead">The puzzle boards now use legal chess movement. Select a piece, then a legal destination. There are two quick mate-in-one boards plus a separate challenge board.</p><div class="boards"><section class="boardbox"><h2>⚡ Quick Checkmate #1</h2><p class="muted">White to move. Find the mate.</p><div id="puzzle1" class="board"></div><div class="bar"><span id="p1status" class="status"></span><button class="btn" onclick="loadPuzzle(0)">Reset</button></div></section><section class="boardbox"><h2>⚡ Quick Checkmate #2</h2><p class="muted">White to move. Find Qg7#.</p><div id="puzzle2" class="board"></div><div class="bar"><span id="p2status" class="status"></span><button class="btn" onclick="loadPuzzle(1)">Reset</button></div></section></div><section class="panel" style="margin-top:22px"><h2>♟ Challenge Aravinth</h2><p class="muted">If Aravinth is online, your challenge request is stored and a notification email is sent after the backend is connected.</p><p><span id="ownerDot" class="online-dot"></span> <span id="ownerStatus">Checking availability…</span></p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" onclick="challenge()">Challenge Aravinth</button><button class="btn" onclick="createRoom()">Create challenge board</button></div><div id="room" class="room"><p><strong>Room:</strong> <code id="roomId"></code></p><p class="muted">Share this URL with your opponent. Both players can open it. The backend room syncs the latest FEN/move.</p><div id="challengeBoard" class="board"></div><div class="bar"><span id="challengeStatus" class="status"></span><button class="btn" onclick="copyRoom()">Copy room link</button></div><div id="moves" class="move-list"></div></div></section></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+</head>
+<body>
+<nav><div class="wrap nav">
+<a class="brand" href="index.html">Aravinth<span>.dev</span></a>
+<div class="links"><a href="index.html">Home</a><a href="index.html#experience">Experience</a><a href="index.html#projects">Projects</a><a href="refer.html">Refer</a><a href="ask.html">Ask</a><a href="chess.html">Challenge</a><a href="feedback.html">Feedback</a></div>
+</div></nav>
+
+<main class="wrap article">
+<div class="eyebrow">CRITICAL CHECKMATE LAB</div>
+<h1>Play the board. Then challenge me.</h1>
+<p class="lead">Two quick checkmate puzzles are available below. The challenge board is a separate real chess board for an actual player-vs-player room.</p>
+
+<div class="boards">
+<section class="card"><h2>⚡ Quick Checkmate #1</h2><p class="muted">White to move. Find Qf8#.</p><div class="board-shell"><div id="puzzle1" class="board"></div></div><div class="bar"><span id="p1status" class="muted">White to move.</span><button class="btn" onclick="resetPuzzle(0)">Reset</button></div></section>
+<section class="card"><h2>⚡ Quick Checkmate #2</h2><p class="muted">White to move. Find Qg7#.</p><div class="board-shell"><div id="puzzle2" class="board"></div></div><div class="bar"><span id="p2status" class="muted">White to move.</span><button class="btn" onclick="resetPuzzle(1)">Reset</button></div></section>
+</div>
+
+<section class="panel">
+<h2>♟ Challenge Aravinth</h2>
+<p class="muted">If Aravinth is available, send a challenge and open a live room.</p>
+<div class="online"><span id="ownerDot" class="dot"></span><span id="ownerStatus">Checking availability…</span></div>
+<div class="bar" style="justify-content:flex-start;margin-top:14px"><button class="btn primary" onclick="challenge()">Challenge Aravinth</button><button class="btn" onclick="createRoom()">Create challenge board</button></div>
+<div id="room" class="room">
+<p><strong>Challenge room:</strong> <span id="roomId"></span></p>
+<div class="board-shell"><div id="challengeBoard" class="board"></div></div>
+<div class="bar"><span id="challengeStatus" class="muted">White to move.</span><button class="btn" onclick="copyRoom()">Copy room link</button></div>
+<div id="moves" class="move-list" style="margin-top:12px">No moves yet.</div>
+</div>
+</section>
+</main>
+<footer><div class="wrap">© 2026 Aravinth V • ServiceNow • Automation • AI • <a href="index.html">Home</a></div></footer>
+
 <script>
 const PUZZLES=[
  {fen:"7k/5Q2/6K1/8/8/8/8/8 w - - 0 1",answer:"f7f8"},
  {fen:"7k/5K2/8/8/8/8/8/6Q1 w - - 0 1",answer:"g1g7"}
 ];
-let puzzleGames=[new Chess(PUZZLES[0].fen),new Chess(PUZZLES[1].fen)], puzzleSel=[null,null];
-function squareIndex(s){const f=s.charCodeAt(0)-97,r=8-Number(s[1]);return r*8+f}
-function drawGame(el,game,selected){el.innerHTML="";const b=game.board();for(let r=0;r<8;r++)for(let c=0;c<8;c++){const s=document.createElement("button");s.className="sq "+((r+c)%2?"dark":"light");const p=b[r][c];if(p){const sym={w:{p:"♙",r:"♖",n:"♘",b:"♗",q:"♕",k:"♔"},b:{p:"♟",r:"♜",n:"♞",b:"♝",q:"♛",k:"♚"}};s.textContent=sym[p.color][p.type];s.classList.add(p.color==="w"?"piece-white":"piece-black")}const sq=String.fromCharCode(97+c)+(8-r);if(selected===sq)s.classList.add("selected");s.onclick=()=>pieceClick(game,sq);el.appendChild(s)}}
-function pieceClick(game,sq){const i=puzzleGames.indexOf(game);const status=document.getElementById(i===0?"p1status":"p2status");if(game.turn()!=="w"){return}if(!puzzleSel[i]){const p=game.get(sq);if(p&&p.color==="w"){puzzleSel[i]=sq;drawGame(document.getElementById(i===0?"puzzle1":"puzzle2"),game,sq);status.textContent="Piece selected — choose a legal square."; }return}const from=puzzleSel[i];const move={from,to:sq,promotion:"q"};let legal;try{legal=game.move(move)}catch{legal=null}if(!legal){status.textContent="Illegal move. Choose a highlighted/legal destination.";puzzleSel[i]=null;drawGame(document.getElementById(i===0?"puzzle1":"puzzle2"),game,null);return}if(i===0 && from==="f7" && sq==="f8" && game.isCheckmate()){status.textContent="CHECKMATE! 🎉 Correct critical move."}else if(i===1 && from==="g1" && sq==="g7" && game.isCheckmate()){status.textContent="CHECKMATE! 🎉 Correct Qg7# move."}else{status.textContent="Legal move, but not the puzzle solution. Reset and try again."}puzzleSel[i]=null;drawGame(document.getElementById(i===0?"puzzle1":"puzzle2"),game,null)}
-function loadPuzzle(i){puzzleGames[i]=new Chess(PUZZLES[i].fen);puzzleSel[i]=null;drawGame(document.getElementById(i===0?"puzzle1":"puzzle2"),puzzleGames[i],null);document.getElementById(i===0?"p1status":"p2status").textContent="White to move."}
-loadPuzzle(0);loadPuzzle(1);
+const games=[new Chess(PUZZLES[0].fen),new Chess(PUZZLES[1].fen)], selected=[null,null], last=[null,null];
+const glyph={w:{p:"♙",n:"♘",b:"♗",r:"♖",q:"♕",k:"♔"},b:{p:"♟",n:"♞",b:"♝",r:"♜",q:"♛",k:"♚"}};
 
-// Availability uses JSONP from the Apps Script backend. It is intentionally optional until the backend is deployed.
-function availability(){const url=window.ARAVINTH_CONFIG?.backendUrl;if(!url){document.getElementById("ownerStatus").textContent="Backend not connected yet.";return}const cb="av_"+Date.now();window[cb]=data=>{document.getElementById("ownerDot").classList.toggle("on",!!data.online);document.getElementById("ownerStatus").textContent=data.online?"Aravinth is online":"Aravinth is currently offline";delete window[cb];s.remove()};const s=document.createElement("script");s.src=url+"?action=availability&callback="+cb;document.body.appendChild(s);setTimeout(()=>{if(window[cb]){document.getElementById("ownerStatus").textContent="Availability unavailable";delete window[cb];s.remove()}},5000)}availability();setInterval(availability,45000);
+function render(el,game,sel,lastMove){
+  el.innerHTML="";
+  const board=game.board();
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+    const sq=String.fromCharCode(97+c)+(8-r), b=board[r][c];
+    const button=document.createElement("button");
+    button.className="sq "+(((r+c)%2===0)?"light":"dark");
+    if(sel===sq)button.classList.add("selected");
+    if(lastMove&&(lastMove.from===sq||lastMove.to===sq))button.classList.add("last");
+    if(b)button.innerHTML='<span class="piece '+(b.color==="w"?"white":"black")+'">'+glyph[b.color][b.type]+"</span>";
+    button.dataset.square=sq;
+    button.onclick=()=>el.dataset.kind==="challenge"?challengeClick(sq):puzzleClick(Number(el.dataset.puzzle),sq);
+    el.appendChild(button);
+  }
+}
 
-async function challenge(){const name=prompt("Your name?");if(!name)return;const email=prompt("Your email?");if(!email||!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(email)){alert("Please enter a valid email.");return}const d={action:"challenge",name,email,visitorId:window.AravinthSite.visitorId,page:location.href};const sent=await window.AravinthSite.send(d);alert(sent?"Challenge request sent to Aravinth.":"Backend is not connected. Your challenge is saved locally.");if(!sent)localStorage.setItem("pendingChallenge",JSON.stringify(d))}
+function puzzleClick(i,sq){
+  const game=games[i], status=document.getElementById(i===0?"p1status":"p2status");
+  if(game.game_over()){return}
+  if(!selected[i]){
+    const p=game.get(sq);
+    if(p&&p.color===game.turn()){selected[i]=sq;render(document.getElementById(i?"puzzle2":"puzzle1"),game,sq,last[i]);status.textContent="Piece selected — choose a legal destination."}
+    return;
+  }
+  const from=selected[i]; let move=null;
+  try{move=game.move({from,to:sq,promotion:"q"})}catch(e){}
+  selected[i]=null;
+  if(!move){status.textContent="That move is not legal. Try another square.";render(document.getElementById(i?"puzzle2":"puzzle1"),game,null,last[i]);return}
+  last[i]={from:move.from,to:move.to};
+  if(game.in_checkmate()&&move.from+move.to===PUZZLES[i].answer)status.textContent="CHECKMATE! 🎉 Correct critical move.";
+  else if(move.from+move.to===PUZZLES[i].answer)status.textContent="Correct move — checkmate detected by the board.";
+  else status.textContent="Legal move, but not the puzzle solution. Reset and try again.";
+  render(document.getElementById(i?"puzzle2":"puzzle1"),game,null,last[i]);
+}
+
+function resetPuzzle(i){games[i]=new Chess(PUZZLES[i].fen);selected[i]=null;last[i]=null;document.getElementById(i?"p2status":"p1status").textContent="White to move.";render(document.getElementById(i?"puzzle2":"puzzle1"),games[i],null,null)}
+document.getElementById("puzzle1").dataset.puzzle="0";document.getElementById("puzzle2").dataset.puzzle="1";resetPuzzle(0);resetPuzzle(1);
+
+function availability(){
+ const url=window.ARAVINTH_CONFIG&&ARAVINTH_CONFIG.backendUrl;
+ if(!url){ownerStatus.textContent="Availability is ready after backend setup.";return}
+ const cb="av"+Date.now();window[cb]=d=>{ownerDot.classList.toggle("on",!!d.online);ownerStatus.textContent=d.online?"Aravinth is online":"Aravinth is currently offline";delete window[cb];s.remove()};
+ const s=document.createElement("script");s.src=url+"?action=availability&callback="+cb;document.body.appendChild(s);setTimeout(()=>{if(window[cb]){delete window[cb];s.remove();ownerStatus.textContent="Availability unavailable"}},5000)
+}
+availability();setInterval(availability,45000);
+
+async function challenge(){
+ const name=prompt("Your name?");if(!name)return;
+ const email=prompt("Your email?");if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())){alert("Please enter a valid email address.");return}
+ const sent=await window.AravinthSite.send({action:"challenge",name,email,page:location.href});
+ alert(sent?"Challenge request sent.":"Backend is not connected yet.");
+}
+
 let roomGame=null,roomId="";
-async function createRoom(){roomId=new URLSearchParams(location.search).get("room")||("ARV-"+Math.random().toString(36).slice(2,8).toUpperCase());history.replaceState({}, "", "chess.html?room="+roomId);document.getElementById("room").classList.add("open");document.getElementById("roomId").textContent=roomId;roomGame=new Chess();drawChallenge();await window.AravinthSite.send({action:"room_create",roomId,fen:roomGame.fen(),visitorId:window.AravinthSite.visitorId});pollRoom()}
-function drawChallenge(){drawGame(document.getElementById("challengeBoard"),roomGame,null)}
-async function challengeMove(from,to){try{const m=roomGame.move({from,to,promotion:"q"});if(!m)return;drawChallenge();document.getElementById("moves").textContent=roomGame.history().join("  ");await window.AravinthSite.send({action:"room_move",roomId,fen:roomGame.fen(),move:m.san,visitorId:window.AravinthSite.visitorId})}catch{}}
-document.getElementById("challengeBoard").addEventListener("click",()=>{});
-function pollRoom(){if(!roomId)return;const url=window.ARAVINTH_CONFIG?.backendUrl;if(!url)return;const cb="room_"+Date.now();window[cb]=data=>{if(data&&data.fen&&roomGame&&data.fen!==roomGame.fen()){roomGame.load(data.fen);drawChallenge();document.getElementById("moves").textContent=(data.history||[]).join("  ")}delete window[cb];s.remove()};const s=document.createElement("script");s.src=url+"?action=room&roomId="+encodeURIComponent(roomId)+"&callback="+cb;document.body.appendChild(s);setTimeout(()=>{if(window[cb]){delete window[cb];s.remove()}},5000);setTimeout(pollRoom,2500)}
-function copyRoom(){navigator.clipboard?.writeText(location.href);alert("Room link copied.")}
-const roomParam=new URLSearchParams(location.search).get("room");if(roomParam){roomId=roomParam;document.getElementById("room").classList.add("open");document.getElementById("roomId").textContent=roomId;roomGame=new Chess();pollRoom();drawChallenge()}
-</script><footer><div class="wrap">© 2026 Aravinth V • ServiceNow • Automation • AI • <a href="index.html">Home</a></div></footer></body></html>
+function createRoom(){
+ roomId=new URLSearchParams(location.search).get("room")||("ARV-"+Math.random().toString(36).slice(2,8).toUpperCase());
+ history.replaceState({}, "", "chess.html?room="+roomId);
+ document.getElementById("room").classList.add("open");document.getElementById("roomId").textContent=roomId;
+ roomGame=new Chess();const el=document.getElementById("challengeBoard");el.dataset.kind="challenge";render(el,roomGame,null,null);
+ document.getElementById("challengeStatus").textContent="White to move.";document.getElementById("moves").textContent="No moves yet.";
+ window.AravinthSite.send({action:"room_create",roomId,fen:roomGame.fen()});pollRoom();
+}
+function challengeClick(sq){
+ if(!roomGame)return;
+ if(!challengeClick.sel){const p=roomGame.get(sq);if(p&&p.color===roomGame.turn()){challengeClick.sel=sq;render(challengeBoard,roomGame,sq,null);challengeStatus.textContent="Piece selected — choose a legal destination."}return}
+ const from=challengeClick.sel;let move=null;try{move=roomGame.move({from,to:sq,promotion:"q"})}catch(e){}
+ challengeClick.sel=null;
+ if(!move){challengeStatus.textContent="Illegal move.";render(challengeBoard,roomGame,null,null);return}
+ challengeStatus.textContent=roomGame.in_checkmate()?"Checkmate! 🎉":roomGame.in_check()?"Check.":"Move played.";
+ render(challengeBoard,roomGame,null,{from:move.from,to:move.to});moves.textContent=roomGame.history().join("  ");
+ window.AravinthSite.send({action:"room_move",roomId,fen:roomGame.fen(),move:move.san});
+}
+function pollRoom(){
+ if(!roomId||!window.ARAVINTH_CONFIG||!ARAVINTH_CONFIG.backendUrl)return;
+ const cb="room"+Date.now();window[cb]=d=>{if(d&&d.fen&&roomGame&&d.fen!==roomGame.fen()){roomGame.load(d.fen);render(challengeBoard,roomGame,null,null);moves.textContent=(d.history||[]).join("  ")}delete window[cb];s.remove()};
+ const s=document.createElement("script");s.src=ARAVINTH_CONFIG.backendUrl+"?action=room&roomId="+encodeURIComponent(roomId)+"&callback="+cb;document.body.appendChild(s);
+ setTimeout(()=>{if(window[cb]){delete window[cb];s.remove()}},4000);setTimeout(pollRoom,2500);
+}
+function copyRoom(){navigator.clipboard&&navigator.clipboard.writeText(location.href);alert("Room link copied.")}
+const existingRoom=new URLSearchParams(location.search).get("room");if(existingRoom){createRoom()}
+</script>
+</body>
+</html>
