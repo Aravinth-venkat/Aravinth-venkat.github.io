@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aravinth V — ServiceNow Developer portfolio, projects, skills and AI portfolio assistant.">
+  <title>Aravinth V | ServiceNow Developer</title>
+  <style>
+    :root{--bg:#07111f;--card:#0d1b2f;--text:#eef6ff;--muted:#9fb2c7;--accent:#5ec8ff;--accent2:#8b7cff;--line:#20344d;--max:1120px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 80% 0,#18355b 0,transparent 35%),var(--bg);color:var(--text);line-height:1.6}
+    a{color:inherit}.wrap{max-width:var(--max);margin:auto;padding:0 24px}
+    nav{position:sticky;top:0;z-index:20;background:#07111fdd;backdrop-filter:blur(14px);border-bottom:1px solid #ffffff12}
+    .nav{height:68px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:900;font-size:19px}.brand b{color:var(--accent)}
+    .navlinks{display:flex;gap:22px}.navlinks a{text-decoration:none;color:var(--muted);font-size:14px}.navlinks a:hover{color:var(--text)}
+    .hero{padding:95px 0 75px;display:grid;grid-template-columns:1.35fr .65fr;gap:48px;align-items:center}.eyebrow{color:var(--accent);font-weight:900;font-size:13px;letter-spacing:1.5px;text-transform:uppercase}
+    h1{font-size:clamp(44px,7vw,78px);line-height:1;margin:12px 0 22px}h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lead{font-size:19px;color:var(--muted);max-width:740px}.buttons{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}.btn{padding:12px 18px;border-radius:12px;text-decoration:none;font-weight:900;border:1px solid var(--line);display:inline-block}.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#04101d;border:0}.secondary{background:#ffffff08}
+    .profile{background:linear-gradient(180deg,#112641,#0a1729);border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:0 25px 80px #0005}.avatar{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#06111d;font-size:30px;font-weight:950;margin-bottom:18px}.profile h3{margin:0 0 5px}.muted{color:var(--muted)}
+    section{padding:72px 0}.title{font-size:35px;margin:0 0 8px}.subtitle{color:var(--muted);margin:0 0 28px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:#0a1728bb;border:1px solid var(--line);border-radius:18px;padding:22px}.card h3{margin:0 0 8px}.card p{color:var(--muted);margin:0}.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.tag{font-size:12px;color:#d6e6f4;border:1px solid var(--line);background:#ffffff08;padding:5px 9px;border-radius:999px}
+    .timeline{display:grid;gap:8px}.role{display:grid;grid-template-columns:170px 1fr;gap:24px;padding:20px 0;border-bottom:1px solid var(--line)}.role:last-child{border:0}.date{color:var(--accent);font-weight:900}
+    footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-size:14px}
+    .chatfab{position:fixed;right:20px;bottom:20px;z-index:50;border:0;border-radius:999px;padding:15px 19px;background:linear-gradient(90deg,var(--accent),var(--accent2));font-weight:950;cursor:pointer;box-shadow:0 15px 45px #0008}
+    .chat{display:none;position:fixed;right:20px;bottom:78px;width:min(390px,calc(100vw - 40px));height:540px;z-index:60;background:#091727f7;border:1px solid #34506d;border-radius:20px;overflow:hidden;box-shadow:0 25px 100px #0009}.chat.open{display:flex;flex-direction:column}
+    .chathead{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.close{border:0;background:none;color:var(--muted);font-size:24px;cursor:pointer}
+    .chatbody{flex:1;padding:15px;overflow:auto}.msg{padding:11px 13px;border-radius:14px;margin-bottom:10px;font-size:14px}.bot{background:#10243b}.user{background:#173b57;margin-left:32px}
+    .chatinput{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}.chatinput input{flex:1;background:#07111f;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px}.chatinput button{border:0;border-radius:10px;padding:0 15px;font-weight:900}
+    @media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:65px}.grid{grid-template-columns:1fr}.navlinks{display:none}.role{grid-template-columns:1fr;gap:4px}}
+  </style>
+</head>
+<body>
+<nav><div class="wrap nav"><div class="brand">Aravinth<b>.dev</b></div><div class="navlinks"><a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#contact">Contact</a></div></div></nav>
+
+<main>
+<section class="wrap hero">
+  <div>
+    <div class="eyebrow">ServiceNow Developer • Automation • AI</div>
+    <h1>Hi, I'm <span>Aravinth V.</span></h1>
+    <p class="lead">I build practical ServiceNow solutions across ITSM, CMDB, automation, integrations and AI-enabled experiences. Explore my skills, projects and professional journey.</p>
+    <div class="buttons"><a class="btn primary" href="#projects">View my work</a><a class="btn secondary" href="#contact">Contact me</a></div>
+  </div>
+  <aside class="profile">
+    <div class="avatar">AV</div>
+    <h3>ServiceNow Developer</h3>
+    <p class="muted">ITSM • CMDB • JavaScript • REST • Flow Designer • Now Assist • Virtual Agent</p>
+    <div class="tags"><span class="tag">GlideRecord</span><span class="tag">GlideAjax</span><span class="tag">REST API</span><span class="tag">CMDB</span><span class="tag">Flow Designer</span></div>
+  </aside>
+</section>
+
+<section id="about"><div class="wrap"><h2 class="title">About me</h2><p class="subtitle">ServiceNow engineering with an automation and AI mindset.</p><div class="card"><p>I work on ServiceNow customisation, backend form logic, ITSM processes, workflow automation, CMDB-related capabilities and integrations. I enjoy converting manual operational requirements into reliable, maintainable platform solutions.</p></div></div></section>
+
+<section id="skills"><div class="wrap"><h2 class="title">Core skills</h2><p class="subtitle">Platform capabilities and technologies I work with.</p><div class="grid">
+<div class="card"><h3>ServiceNow</h3><p>Incident, Problem, Change, Release, Request, Knowledge, Asset Management and Service Catalog.</p></div>
+<div class="card"><h3>Development</h3><p>Business Rules, Script Includes, Client Scripts, UI Actions, UI Policies, GlideAjax, GlideRecord and JavaScript.</p></div>
+<div class="card"><h3>Automation & AI</h3><p>Flow Designer, REST integrations, Virtual Agent, Now Assist Studio and AI-focused platform experiences.</p></div>
+</div></div></section>
+
+<section id="projects"><div class="wrap"><h2 class="title">Featured projects</h2><p class="subtitle">Examples of ServiceNow work and solution areas.</p><div class="grid">
+<div class="card"><h3>Change Automation</h3><p>Automated stakeholder communication and lifecycle handling when a Change record reaches the communication stage.</p><div class="tags"><span class="tag">Change</span><span class="tag">Business Rules</span><span class="tag">Notifications</span></div></div>
+<div class="card"><h3>Now Assist Usage Dashboard</h3><p>Dashboard concept for analysing generative AI usage patterns and usage records across groups.</p><div class="tags"><span class="tag">Now Assist</span><span class="tag">Analytics</span><span class="tag">GenAI</span></div></div>
+<div class="card"><h3>Release Request Experience</h3><p>Guided release intake experience using Service Portal, Virtual Agent and workflow automation.</p><div class="tags"><span class="tag">Release</span><span class="tag">Virtual Agent</span><span class="tag">Flow Designer</span></div></div>
+</div></div></section>
+
+<section id="experience"><div class="wrap"><h2 class="title">Experience</h2><p class="subtitle">Professional background.</p><div class="timeline">
+<div class="role"><div class="date">2024–2025</div><div><h3>ServiceNow Developer — JAAS IT Technologies</h3><p class="muted">ServiceNow development, platform customisation, scripting and ITSM-focused delivery.</p></div></div>
+<div class="role"><div class="date">2022–2024</div><div><h3>ServiceNow Developer — Concentrix</h3><p class="muted">ServiceNow development and ITSM automation across enterprise workflows.</p></div></div>
+<div class="role"><div class="date">2021</div><div><h3>Engineering Apprentice — L.G. Balakrishnan & Bros</h3><p class="muted">Engineering and quality-focused shop-floor experience.</p></div></div>
+</div></div></section>
+
+<section id="contact"><div class="wrap"><h2 class="title">Let's connect</h2><p class="subtitle">Interested in ServiceNow development, automation or AI-enabled platform experiences?</p><div class="buttons"><a class="btn primary" href="mailto:leoaravind007@gmail.com">Email me</a><a class="btn secondary" href="https://github.com/Aravinth-venkat" target="_blank" rel="noopener">GitHub</a></div></div></section>
+</main>
+
+<button class="chatfab" id="chatOpen">🤖 Ask my AI</button>
+<div class="chat" id="chat">
+  <div class="chathead"><strong>Aravinth AI Assistant</strong><button class="close" id="chatClose">×</button></div>
+  <div class="chatbody" id="chatBody"><div class="msg bot">Hi! I'm Aravinth's portfolio assistant. Ask me about his ServiceNow skills, projects, experience or contact details.</div></div>
+  <div class="chatinput"><input id="chatInput" placeholder="Ask about Aravinth…"><button class="primary" id="send">Send</button></div>
+</div>
+
+<footer><div class="wrap">© 2026 Aravinth V. Built with HTML, CSS and JavaScript.</div></footer>
+
+<script>
+const chat=document.getElementById("chat"),body=document.getElementById("chatBody"),input=document.getElementById("chatInput");
+document.getElementById("chatOpen").onclick=()=>chat.classList.add("open");
+document.getElementById("chatClose").onclick=()=>chat.classList.remove("open");
+
+function answer(q){
+  const s=q.toLowerCase();
+  if(s.includes("skill")||s.includes("technology")) return "Aravinth focuses on ServiceNow ITSM, CMDB, JavaScript, GlideRecord, GlideAjax, REST integrations, Flow Designer, Virtual Agent and Now Assist.";
+  if(s.includes("project")) return "The portfolio highlights Change Automation, a Now Assist Usage Dashboard concept, and a Release Request experience using Virtual Agent and Flow Designer.";
+  if(s.includes("experience")||s.includes("work")) return "Aravinth has ServiceNow development experience with JAAS IT Technologies and Concentrix, plus earlier engineering experience at L.G. Balakrishnan & Bros.";
+  if(s.includes("servicenow")) return "Aravinth's ServiceNow focus includes ITSM, Change, Release, Request, CMDB, scripting, REST integrations, Flow Designer, Virtual Agent and Now Assist.";
+  if(s.includes("contact")||s.includes("email")) return "You can contact Aravinth at leoaravind007@gmail.com or visit his GitHub profile.";
+  if(s.includes("cmdb")) return "His CMDB-related focus includes CI data, class hierarchy, relationships, identification/reconciliation concepts and data quality.";
+  return "I can answer questions about Aravinth's ServiceNow skills, projects, experience, CMDB work or contact details. Try one of those topics.";
+}
+function send(){
+  const q=input.value.trim(); if(!q)return;
+  const safe=q.replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[c]));
+  body.innerHTML+=`<div class="msg user">${safe}</div><div class="msg bot">${answer(q)}</div>`;
+  input.value="";body.scrollTop=body.scrollHeight;
+}
+document.getElementById("send").onclick=send;
+input.addEventListener("keydown",e=>{if(e.key==="Enter")send()});
+</script>
+</body>
+</html>
