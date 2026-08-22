@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aravinth.dev — Chess CPU</title>
+<style>
+:root{--bg:#03111c;--text:#eef7ff;--muted:#9eb4c7;--line:#173d58;--light:#f0d9b5;--dark:#769656;--accent:#19d8ff;--panel:#062234}
+*{box-sizing:border-box}html{background:var(--bg);color-scheme:dark}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 10%,rgba(0,210,255,.1),transparent 28%),radial-gradient(circle at 85% 80%,rgba(120,70,255,.1),transparent 30%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+a{color:inherit;text-decoration:none}.top{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(3,17,28,.94);backdrop-filter:blur(14px)}
+.nav{max-width:1180px;margin:auto;padding:14px 18px;display:flex;align-items:center;gap:20px}.brand{font-weight:800;font-size:18px;margin-right:auto}.brand span{color:var(--accent)}
+.links{display:flex;gap:16px;font-size:12px;color:#c4d6e5}.wrap{width:min(1050px,calc(100% - 24px));margin:auto}
+.hero{padding:30px 0 16px}.kicker{font-size:11px;letter-spacing:2px;color:var(--accent);font-weight:800}
+h1{font-size:clamp(30px,6vw,54px);line-height:1.05;margin:10px 0}.lead{color:var(--muted);line-height:1.55;max-width:760px}
+.card{background:linear-gradient(180deg,rgba(9,36,55,.95),rgba(5,25,40,.95));border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 14px 45px rgba(0,0,0,.22)}
+.controls{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:14px}.control label{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}
+select,button{border:1px solid #24506d;background:#082033;color:var(--text);border-radius:10px;padding:10px 13px;font:inherit;cursor:pointer}
+button:hover{border-color:var(--accent)}button.primary{background:linear-gradient(90deg,#12d9f5,#9a68ff);color:#00111c;border:0;font-weight:800}
+.board-wrap{width:100%;display:flex;justify-content:center;padding:4px 0 14px}.board{width:min(100%,760px);aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);border:5px solid #4b2b17;border-radius:9px;overflow:hidden;box-shadow:0 14px 38px rgba(0,0,0,.38),0 0 0 1px #a66b36}
+.sq{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;user-select:none;cursor:pointer;font-size:clamp(30px,8vw,72px);line-height:1}.sq.light{background:var(--light)}.sq.dark{background:var(--dark)}
+.sq.sel{box-shadow:inset 0 0 0 4px rgba(25,216,255,.95)}.sq.target:after{content:"";position:absolute;width:22%;height:22%;border-radius:50%;background:rgba(15,35,15,.42)}.sq.capture:after{content:"";position:absolute;width:72%;height:72%;border-radius:50%;border:5px solid rgba(220,40,50,.62)}
+.piece{position:relative;z-index:2;font-family:"Arial Unicode MS","Segoe UI Symbol",serif;font-weight:700;text-shadow:0 2px 2px rgba(0,0,0,.65)}.white{color:#fff}.black{color:#222}
+.coord{position:absolute;font-size:9px;font-weight:800;opacity:.7;z-index:3}.rank{left:4px;top:3px}.file{right:4px;bottom:3px}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:10px}.box{padding:13px;border:1px solid #1b4762;border-radius:14px;background:rgba(3,22,35,.55);min-height:68px}.label{font-size:10px;color:var(--muted);letter-spacing:1px}.value{margin-top:8px;font-size:16px}
+.ok{color:#5ff2b1}.warn{color:#ffd166}.bad{color:#ff8090}.footer{padding:30px 0 45px;color:#7f98ab;font-size:12px}
+@media(max-width:700px){.nav{padding:11px 12px}.links{gap:9px;font-size:10px}.wrap{width:calc(100% - 14px)}.card{padding:10px;border-radius:14px}.controls{display:grid;grid-template-columns:1fr 1fr}.control{grid-column:1/-1}.controls button{width:100%}.board{border-width:4px}.info{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><nav class="nav"><a class="brand" href="index.html">Aravinth<span>.dev</span></a><div class="links"><a href="index.html">Home</a><a href="chess.html">Checkmate</a><a href="refer.html">Refer</a><a href="ask.html">Ask</a></div></nav></header>
+<main class="wrap">
+<section class="hero"><div class="kicker">CHESS CPU LAB</div><h1>Play chess against the CPU.</h1><p class="lead">A full 8×8 board with legal piece movement, check, checkmate, captures, promotion, castling and en-passant. Choose a CPU level and play without a time limit.</p></section>
+<section class="card">
+<div class="controls">
+<div class="control"><label for="level">CPU LEVEL</label><select id="level"><option value="1">Beginner</option><option value="2" selected>Intermediate</option><option value="3">Advanced</option></select></div>
+<button id="new" class="primary">♟ New Game</button><button id="flip">↔ Flip Board</button>
+</div>
+<div class="board-wrap"><div id="board" class="board"></div></div>
+<div class="info">
+<div class="box"><div class="label">STATUS</div><div id="status" class="value">Your move — White</div></div>
+<div class="box"><div class="label">LAST MOVE</div><div id="last" class="value">No move yet.</div></div>
+</div>
+</section>
+<footer class="footer">© 2026 Aravinth V • Chess CPU Lab</footer>
+</main>
+<script>
+const U={K:"♔",Q:"♕",R:"♖",B:"♗",N:"♘",P:"♙",k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"};
+const V={P:100,N:320,B:330,R:500,Q:900,K:20000};const files="abcdefgh";
+let B,turn,sel=null,targets=[],flip=false,gameOver=false,castling={K:true,Q:true,k:true,q:true},ep=null,lastMove=null;
+
+function start(){B=[
+["r","n","b","q","k","b","n","r"],["p","p","p","p","p","p","p","p"],
+[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],
+[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],
+["P","P","P","P","P","P","P","P"],["R","N","B","Q","K","B","N","R"]];turn="w";sel=null;targets=[];gameOver=false;castling={K:true,Q:true,k:true,q:true};ep=null;lastMove=null;setStatus("Your move — White","");draw()}
+function color(p){return p?(p===p.toUpperCase()?"w":"b"):null} function inside(r,c){return r>=0&&r<8&&c>=0&&c<8}
+function name(r,c){return files[c]+(8-r)} function pos(s){return{r:8-+s[1],c:files.indexOf(s[0])}}
+function clone(b){return b.map(r=>r.slice())}
+function king(bd,side){for(let r=0;r<8;r++)for(let c=0;c<8;c++)if(bd[r][c]===(side==="w"?"K":"k"))return{r,c};return null}
+function line(bd,a,b){let dr=Math.sign(b.r-a.r),dc=Math.sign(b.c-a.c),r=a.r+dr,c=a.c+dc;while(r!==b.r||c!==b.c){if(bd[r][c])return false;r+=dr;c+=dc}return true}
+function attacked(bd,t,by){for(let r=0;r<8;r++)for(let c=0;c<8;c++){let p=bd[r][c];if(!p||color(p)!==by)continue;let dr=t.r-r,dc=t.c-c,ar=Math.abs(dr),ac=Math.abs(dc),k=p.toUpperCase();
+if(k==="P"){let d=by==="w"?-1:1;if(dr===d&&ac===1)return true}else if(k==="N"){if((ar===2&&ac===1)||(ar===1&&ac===2))return true}else if(k==="K"){if(Math.max(ar,ac)===1)return true}else{let ok=k==="B"?ar===ac:k==="R"?(dr===0||dc===0):(ar===ac||dr===0||dc===0);if(ok&&line(bd,{r,c},t))return true}}return false}
+function check(bd,side){let k=king(bd,side);return !k||attacked(bd,k,side==="w"?"b":"w")}
+function pseudo(bd,a,b,side,opts={}){let p=bd[a.r][a.c],d=bd[b.r][b.c];if(!p||color(p)!==side||(d&&color(d)===side)||d?.toUpperCase()==="K")return false;let dr=b.r-a.r,dc=b.c-a.c,ar=Math.abs(dr),ac=Math.abs(dc),k=p.toUpperCase();
+if(k==="P"){let dir=side==="w"?-1:1;if(dc===0&&!d&&dr===dir)return true;if(dc===0&&!d&&dr===2*dir&&a.r===(side==="w"?6:1)&&!bd[a.r+dir][a.c])return true;if(ac===1&&dr===dir&&(d||ep&&ep.r===b.r&&ep.c===b.c))return true;return false}
+if(k==="N")return ar===2&&ac===1||ar===1&&ac===2;if(k==="B")return ar===ac&&line(bd,a,b);if(k==="R")return(dr===0||dc===0)&&line(bd,a,b);if(k==="Q")return(ar===ac||dr===0||dc===0)&&line(bd,a,b);
+if(k==="K"){if(Math.max(ar,ac)===1)return true;if(dr===0&&ac===2){let rank=side==="w"?7:0;if(a.r!==rank)return false;let rookC=b.c>a.c?7:0;let right=side==="w"?(rookC===7?castling.K:castling.Q):(rookC===7?castling.k:castling.q);if(!right||bd[rank][rookC]!== (side==="w"?"R":"r"))return false;let step=rookC>a.c?1:-1;for(let c=a.c+step;c!==rookC;c+=step)if(bd[rank][c])return false;if(check(bd,side)||attacked(bd,{r:a.r,c:a.c+step},side==="w"?"b":"w")||attacked(bd,{r:a.r,c:a.c+2*step},side==="w"?"b":"w"))return false;return true}return false}return false}
+function apply(bd,a,b,side){let n=clone(bd),p=n[a.r][a.c];n[a.r][a.c]=null;if(p.toUpperCase()==="P"&&ep&&b.r===ep.r&&b.c===ep.c&&!n[b.r][b.c])n[b.r+(side==="w"?1:-1)][b.c]=null;n[b.r][b.c]=p;
+if(p.toUpperCase()==="K"&&Math.abs(b.c-a.c)===2){let rc=b.c>a.c?7:0,tc=b.c>a.c?b.c-1:b.c+1;n[b.r][tc]=n[b.r][rc];n[b.r][rc]=null}return n}
+function legal(bd,a,b,side){if(!pseudo(bd,a,b,side))return false;return !check(apply(bd,a,b,side),side)}
+function moves(side,bd=B){let out=[];for(let r=0;r<8;r++)for(let c=0;c<8;c++){if(color(bd[r][c])!==side)continue;for(let tr=0;tr<8;tr++)for(let tc=0;tc<8;tc++){let a={r,c},b={r:tr,c:tc};if(legal(bd,a,b,side))out.push({a,b})}}return out}
+function moveNotation(m,p){p=p.toUpperCase();return p==="P"?name(m.b.r,m.b.c):p+" "+name(m.b.r,m.b.c)}
+function doMove(m,side){let p=B[m.a.r][m.a.c],cap=B[m.b.r][m.b.c];let wasEp=p.toUpperCase()==="P"&&ep&&m.b.r===ep.r&&m.b.c===ep.c&&!cap;
+if(p==="K")castling.K=castling.Q=false;if(p==="k")castling.k=castling.q=false;
+if(p==="R"){if(m.a.r===7&&m.a.c===0)castling.Q=false;if(m.a.r===7&&m.a.c===7)castling.K=false}
+if(p==="r"){if(m.a.r===0&&m.a.c===0)castling.q=false;if(m.a.r===0&&m.a.c===7)castling.k=false}
+if(cap==="R"){if(m.b.r===7&&m.b.c===0)castling.Q=false;if(m.b.r===7&&m.b.c===7)castling.K=false}
+if(cap==="r"){if(m.b.r===0&&m.b.c===0)castling.q=false;if(m.b.r===0&&m.b.c===7)castling.k=false}
+B=apply(B,m.a,m.b,side);if(p.toUpperCase()==="P"&&Math.abs(m.b.r-m.a.r)===2)ep={r:(m.a.r+m.b.r)/2,c:m.a.c};else ep=null;
+if(p.toUpperCase()==="P"&&(m.b.r===0||m.b.r===7))B[m.b.r][m.b.c]=side==="w"?"Q":"q";
+lastMove={m,p,cap,wasEp};turn=side==="w"?"b":"w";sel=null;targets=[];draw();
+let lm=moves(turn);if(!lm.length){gameOver=true;if(check(B,turn))setStatus("CHECKMATE! 🎉 "+(turn==="w"?"CPU":"You")+" is checkmated.","ok");else setStatus("STALEMATE — draw.","warn");return}
+if(check(B,turn))setStatus("CHECK — "+(turn==="w"?"your king is attacked":"CPU is in check"),"warn");else setStatus(turn==="w"?"Your move — White":"CPU is thinking…","")}
+function evaluate(bd){let s=0;for(let r=0;r<8;r++)for(let c=0;c<8;c++){let p=bd[r][c];if(p)s+=(color(p)==="b"?1:-1)*V[p.toUpperCase()] }return s}
+function search(bd,side,depth,alpha,beta){let ms=moves(side,bd);if(!ms.length)return check(bd,side)?(side==="b"?-999999+depth:999999-depth):0;if(depth===0)return evaluate(bd);let max=side==="b",best=max?-Infinity:Infinity;for(let m of ms){let n=apply(bd,m.a,m.b,side),oldEp=ep;let v=search(n,side==="w"?"b":"w",depth-1,alpha,beta);ep=oldEp;if(max){best=Math.max(best,v);alpha=Math.max(alpha,v)}else{best=Math.min(best,v);beta=Math.min(beta,v)}if(beta<=alpha)break}return best}
+function cpu(){if(gameOver||turn!=="b")return;setStatus("CPU is thinking…","");let ms=moves("b"),depth=+document.getElementById("level").value;let best=-Infinity,bm=ms[0];for(let m of ms){let n=apply(B,m.a,m.b,"b"),v=search(n,"w",Math.max(0,depth-1),-Infinity,Infinity);if(v>best||Math.random()<.08){best=v;bm=m}}setTimeout(()=>doMove(bm,"b"),220)}
+function click(s){if(gameOver||turn!=="w")return;let b=pos(s),p=B[b.r][b.c];if(sel&&targets.includes(s)){let m={a:pos(sel),b};doMove(m,"w");if(!gameOver)cpu();return}if(p&&color(p)==="w"){sel=s;targets=moves("w").filter(m=>m.a.r===b.r&&m.a.c===b.c).map(m=>name(m.b.r,m.b.c));draw()}else{sel=null;targets=[];draw()}}
+function draw(){let el=document.getElementById("board");el.innerHTML="";for(let vr=0;vr<8;vr++)for(let vc=0;vc<8;vc++){let r=flip?7-vr:vr,c=flip?7-vc:vc,s=name(r,c),d=document.createElement("div");d.className="sq "+((r+c)%2?"dark":"light");if(sel===s)d.classList.add("sel");if(targets.includes(s))d.classList.add(B[r][c]?"capture":"target");let p=B[r][c];if(p){let x=document.createElement("span");x.className="piece "+(color(p)==="w"?"white":"black");x.textContent=U[p];d.appendChild(x)}if(c===0){let x=document.createElement("span");x.className="coord rank";x.textContent=8-r;d.appendChild(x)}if(r===7){let x=document.createElement("span");x.className="coord file";x.textContent=files[c];d.appendChild(x)}d.onclick=()=>click(s);el.appendChild(d)}document.getElementById("last").textContent=lastMove?moveNotation(lastMove.m,lastMove.p):"No move yet."}
+function setStatus(t,cl){let e=document.getElementById("status");e.textContent=t;e.className="value "+cl}
+document.getElementById("new").onclick=start;document.getElementById("flip").onclick=()=>{flip=!flip;draw()};start();
+</script>
+</body></html>
