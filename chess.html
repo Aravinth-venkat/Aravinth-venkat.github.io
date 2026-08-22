@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aravinth.dev — Checkmate Lab</title>
+<style>
+:root{
+  --bg:#03111c;--panel:#071c2c;--panel2:#092437;--text:#eef7ff;
+  --muted:#9eb4c7;--accent:#19d8ff;--accent2:#9b6cff;
+  --light:#f0d9b5;--dark:#769656;--line:#173d58;--danger:#ff6b7a;
+}
+*{box-sizing:border-box}
+html{background:var(--bg);color-scheme:dark}
+body{
+  margin:0;min-height:100vh;background:
+  radial-gradient(circle at 15% 10%,rgba(0,210,255,.10),transparent 28%),
+  radial-gradient(circle at 85% 80%,rgba(120,70,255,.10),transparent 30%),
+  var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+a{color:inherit;text-decoration:none}
+.top{
+  position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);
+  background:rgba(3,17,28,.92);backdrop-filter:blur(14px);
+}
+.nav{max-width:1180px;margin:auto;padding:14px 18px;display:flex;align-items:center;gap:20px}
+.brand{font-weight:800;font-size:18px;margin-right:auto}
+.brand span{color:var(--accent)}
+.links{display:flex;gap:18px;font-size:12px;color:#c4d6e5}
+.links a:hover{color:var(--accent)}
+.wrap{width:min(1180px,calc(100% - 24px));margin:auto}
+.hero{padding:38px 0 20px}
+.kicker{font-size:11px;letter-spacing:2px;color:var(--accent);font-weight:800}
+h1{font-size:clamp(32px,6vw,58px);line-height:1.03;margin:10px 0}
+.lead{color:var(--muted);max-width:760px;line-height:1.6}
+.toolbar{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0
+}
+select,.btn{
+  border:1px solid #24506d;background:#082033;color:var(--text);
+  border-radius:10px;padding:10px 13px;font:inherit;cursor:pointer
+}
+.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(90deg,#12d9f5,#9a68ff);color:#00111c;border:0;font-weight:800}
+.btn.danger{border-color:#6a2b3b;color:#ffdbe0}
+.card{
+  background:linear-gradient(180deg,rgba(9,36,55,.94),rgba(5,25,40,.94));
+  border:1px solid var(--line);border-radius:18px;padding:18px;
+  box-shadow:0 14px 45px rgba(0,0,0,.22)
+}
+.board-shell{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:8px 0 14px;
+  margin:0 auto;
+}
+.board{
+  width:min(94vw,700px);
+  max-width:700px;
+  aspect-ratio:1 / 1;
+  display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  grid-template-rows:repeat(8,minmax(0,1fr));
+  border:6px solid #4b2b17;
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 20px 55px rgba(0,0,0,.42),0 0 0 2px #a66b36;
+  flex:none;
+}
+.sq{
+  position:relative;
+  min-width:0;
+  min-height:0;
+  aspect-ratio:1 / 1;
+  display:grid;
+  place-items:center;
+  user-select:none;
+  font-family:"Arial Unicode MS","Segoe UI Symbol",serif;
+  font-size:clamp(30px,8.5vw,68px);
+  line-height:1;
+  cursor:pointer;
+  transition:filter .12s,box-shadow .12s,transform .08s
+}
+.sq.light{background:var(--light)}.sq.dark{background:var(--dark)}
+.sq.selected{box-shadow:inset 0 0 0 5px rgba(25,216,255,.95)}
+.sq.target:after{
+  content:"";width:24%;height:24%;border-radius:50%;background:rgba(15,35,15,.42);
+  position:absolute
+}
+.sq.capture:after{
+  content:"";width:72%;height:72%;border-radius:50%;
+  border:5px solid rgba(220,40,50,.65);position:absolute
+}
+.sq:hover{filter:brightness(1.08)}
+.piece{
+  position:relative;z-index:2;font-weight:700;
+  text-shadow:0 2px 2px rgba(0,0,0,.65),0 0 1px rgba(0,0,0,.9)
+}
+.white{color:#fff}.black{color:#252525}
+.coord{
+  position:absolute;font-size:10px;font-weight:800;opacity:.7;z-index:3
+}
+.rank{left:4px;top:3px}.file{right:4px;bottom:3px}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.status{min-height:48px;display:flex;align-items:center}
+.ok{color:#5ff2b1}.warn{color:#ffd166}.bad{color:#ff8090}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.hidden{display:none!important}
+.next{
+  margin-top:16px;padding:15px;border:1px solid #23536e;border-radius:14px;
+  background:rgba(11,43,64,.65)
+}
+.next strong{display:block;margin-bottom:8px}
+.challenge{margin-top:18px}
+.footer{padding:34px 0 50px;color:#7f98ab;font-size:12px}
+@media(max-width:700px){
+  .nav{padding:11px 12px}
+  .links{gap:9px;font-size:10px}
+  .wrap{width:calc(100% - 14px)}
+  .hero{padding-top:28px}
+  .card{padding:12px;border-radius:14px}
+  .toolbar{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+    align-items:end;
+  }
+  .toolbar label{grid-column:1 / -1}
+  .toolbar select{width:100%}
+  .toolbar .btn{width:100%}
+  .board-shell{padding:5px 0 14px}
+  .board{
+    width:min(96vw,680px);
+    max-width:680px;
+    border-width:4px;
+    border-radius:8px;
+  }
+  .info{grid-template-columns:1fr}
+  .sq{font-size:clamp(27px,10.5vw,64px)}
+  .coord{font-size:9px}
+}
+@media(min-width:1000px){
+  .main-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px}
+  .board{width:min(92%,700px)}
+}
+@media(prefers-color-scheme:light){
+  /* Keep the chess experience readable while adapting the surrounding page. */
+  :root{--bg:#eef6fb;--panel:#fff;--panel2:#f7fbff;--text:#102232;--muted:#526b7d;--line:#c7d9e5}
+  html{color-scheme:light}
+  body{background:radial-gradient(circle at 15% 10%,rgba(0,180,230,.12),transparent 28%),#eef6fb}
+  .top{background:rgba(238,246,251,.9)}
+  .card{background:#fff}
+  select,.btn{background:#f7fbff;color:#102232}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <nav class="nav">
+    <a class="brand" href="index.html">Aravinth<span>.dev</span></a>
+    <div class="links">
+      <a href="index.html">Home</a><a href="experience.html">Experience</a>
+      <a href="projects.html">Projects</a><a href="refer.html">Refer</a>
+      <a href="ask.html">Ask</a><a href="chess.html">Challenge</a><a href="feedback.html">Feedback</a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="kicker">CRITICAL CHECKMATE LAB</div>
+    <h1>Solve it. Then challenge me.</h1>
+    <p class="lead">
+      One responsive real chess board. Every new puzzle is selected dynamically.
+      Solve the current mate to unlock another challenge or increase the difficulty.
+      Legal movement is enforced for the pieces shown on the board.
+    </p>
+  </section>
+
+  <div class="main-grid">
+    <section class="card">
+      <div class="toolbar">
+        <label>
+          <span style="display:block;font-size:11px;color:var(--muted);margin-bottom:5px">PUZZLE TYPE</span>
+          <select id="difficulty">
+            <option>Easy</option><option>Medium</option><option>Hard</option>
+          </select>
+        </label>
+        <button class="btn" id="newPuzzle">🎲 New Puzzle</button>
+        <button class="btn danger" id="reset">↻ Reset</button>
+      </div>
+
+      <h2 id="title" style="margin:12px 0 4px">Loading puzzle…</h2>
+      <div id="subtitle" style="color:var(--muted);font-size:13px">White to move.</div>
+
+      <div class="board-shell">
+        <div id="board" class="board" aria-label="Chess board"></div>
+      </div>
+      <div style="text-align:center;color:var(--muted);font-size:11px;margin:-4px 0 12px">
+        Responsive 8×8 board • Same square size on phone, tablet and desktop
+      </div>
+
+      <div class="info">
+        <div class="card" style="padding:12px">
+          <div style="font-size:11px;color:var(--muted)">STATUS</div>
+          <div id="status" class="status">Loading…</div>
+        </div>
+        <div class="card" style="padding:12px">
+          <div style="font-size:11px;color:var(--muted)">MOVE</div>
+          <div id="moveText" class="status">Select a white piece.</div>
+        </div>
+      </div>
+
+      <div id="nextBox" class="next hidden">
+        <strong>🎉 Checkmate solved!</strong>
+        <div style="color:var(--muted);font-size:13px">Ready for another challenge?</div>
+        <div class="actions">
+          <button class="btn primary" id="nextPuzzle">➡️ Next Checkmate</button>
+          <button class="btn" id="harderPuzzle">🔥 Try Harder</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="card challenge">
+      <div class="kicker">LIVE MATCH</div>
+      <h2>Challenge Aravinth</h2>
+      <p style="color:var(--muted);line-height:1.5;font-size:13px">
+        Want to play a real match instead? Send a challenge request.
+        The live-room backend can notify Aravinth when connected.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="refer.html">Challenge Aravinth</a>
+        <a class="btn" href="ask.html">Ask a question</a>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:14px">
+        No time limit • Player-vs-player mode • Responsive board
+      </p>
+    </aside>
+  </div>
+
+  <footer class="footer">© 2026 Aravinth V • ServiceNow • Automation • AI • Checkmate Lab</footer>
+</main>
+
+<script>
+const PIECES = {
+  K:"♔",Q:"♕",R:"♖",B:"♗",N:"♘",P:"♙",
+  k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"
+};
+
+/*
+  Puzzle positions use a compact FEN-like board description.
+  The move validator supports the chess piece movement needed by these
+  interactive checkmate puzzles and verifies the intended mating move
+  against the puzzle's expected solution.
+*/
+const PUZZLES = [
+  {level:"Easy",name:"Back-rank Queen",fen:"6k1/5ppp/8/8/8/8/5PPP/4Q1K1 w - - 0 1",answer:"e1e8",label:"Queen to e8#"},
+  {level:"Easy",name:"Rook File Mate",fen:"6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",answer:"e1e8",label:"Rook to e8#"},
+  {level:"Easy",name:"Bishop Diagonal Mate",fen:"7k/6pp/5B2/8/8/8/6PP/6K1 w - - 0 1",answer:"f6g7",label:"Bishop to g7#"},
+  {level:"Medium",name:"Knight Net",fen:"6k1/5ppp/8/4N3/8/8/5PPP/6K1 w - - 0 1",answer:"e5g6",label:"Knight to g6#"},
+  {level:"Medium",name:"Queen and Knight",fen:"6k1/5ppp/8/4N3/8/8/5PQ1/6K1 w - - 0 1",answer:"g2g8",label:"Queen to g8#"},
+  {level:"Medium",name:"Rook and Bishop",fen:"6k1/5ppp/8/8/3B4/8/5PR1/6K1 w - - 0 1",answer:"g2g8",label:"Rook to g8#"},
+  {level:"Hard",name:"Knight Fork Mate",fen:"6k1/5ppp/8/2N5/8/8/5PQ1/6K1 w - - 0 1",answer:"c5e6",label:"Knight to e6#"},
+  {level:"Hard",name:"Bishop Pressure",fen:"6k1/5ppp/8/3B4/8/8/5PQ1/6K1 w - - 0 1",answer:"d5g8",label:"Bishop to g8#"},
+  {level:"Hard",name:"Rook Invasion",fen:"6k1/5ppp/8/8/8/2R5/5PP1/6K1 w - - 0 1",answer:"c3c8",label:"Rook to c8#"}
+];
+
+let puzzle = null;
+let board = [];
+let selected = null;
+let targets = [];
+let solved = false;
+let history = [];
+let difficulty = "Easy";
+
+function $(id){return document.getElementById(id)}
+
+function parseFen(fen){
+  const rows=fen.split(" ")[0].split("/");
+  const out=[];
+  rows.forEach(row=>{
+    const r=[];
+    for(const ch of row){
+      if(/\d/.test(ch)){for(let i=0;i<Number(ch);i++)r.push(null)}
+      else r.push(ch);
+    }
+    out.push(r);
+  });
+  return out;
+}
+
+function squareName(r,c){
+  return "abcdefgh"[c]+(8-r);
+}
+function coords(s){
+  return {r:8-Number(s[1]),c:"abcdefgh".indexOf(s[0])};
+}
+function inside(r,c){return r>=0&&r<8&&c>=0&&c<8}
+function colorOf(p){return p ? (p===p.toUpperCase()?"w":"b") : null}
+
+function clearLine(r1,c1,r2,c2){
+  const dr=Math.sign(r2-r1),dc=Math.sign(c2-c1);
+  let r=r1+dr,c=c1+dc;
+  while(r!==r2||c!==c2){
+    if(board[r][c])return false;
+    r+=dr;c+=dc;
+  }
+  return true;
+}
+
+function legalPieceMove(from,to){
+  const a=coords(from),b=coords(to),p=board[a.r][a.c],dest=board[b.r][b.c];
+  if(!p || colorOf(p)!=="w")return false;
+  if(dest && colorOf(dest)==="w")return false;
+  const dr=b.r-a.r,dc=b.c-a.c;
+  const ar=Math.abs(dr),ac=Math.abs(dc);
+  const t=p.toUpperCase();
+
+  if(t==="P"){
+    if(dc===0 && !dest && dr===-1)return true;
+    if(dc===0 && !dest && a.r===6 && dr===-2 && !board[a.r-1][a.c])return true;
+    if(ac===1 && dr===-1 && dest && colorOf(dest)==="b")return true;
+    return false;
+  }
+  if(t==="N")return (ar===2&&ac===1)||(ar===1&&ac===2);
+  if(t==="B")return ar===ac && clearLine(a.r,a.c,b.r,b.c);
+  if(t==="R")return (dr===0||dc===0) && clearLine(a.r,a.c,b.r,b.c);
+  if(t==="Q")return ((dr===0||dc===0)||(ar===ac)) && clearLine(a.r,a.c,b.r,b.c);
+  if(t==="K")return ar<=1&&ac<=1;
+  return false;
+}
+
+function getTargets(from){
+  const p=coords(from),out=[];
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    const s=squareName(r,c);
+    if(legalPieceMove(from,s))out.push(s);
+  }
+  return out;
+}
+
+function draw(){
+  const el=$("board"); el.innerHTML="";
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    const s=squareName(r,c),cell=document.createElement("div");
+    cell.className="sq "+((r+c)%2?"dark":"light");
+    if(selected===s)cell.classList.add("selected");
+    if(targets.includes(s))cell.classList.add(board[r][c]?"capture":"target");
+    const p=board[r][c];
+    if(p){
+      const piece=document.createElement("span");
+      piece.className="piece "+(colorOf(p)==="w"?"white":"black");
+      piece.textContent=PIECES[p];
+      cell.appendChild(piece);
+    }
+    if(c===0){const q=document.createElement("span");q.className="coord rank";q.textContent=8-r;cell.appendChild(q)}
+    if(r===7){const q=document.createElement("span");q.className="coord file";q.textContent="abcdefgh"[c];cell.appendChild(q)}
+    cell.addEventListener("click",()=>clickSquare(s));
+    el.appendChild(cell);
+  }
+}
+
+function clickSquare(s){
+  if(solved)return;
+  const p=coords(s),piece=board[p.r][p.c];
+
+  if(selected && targets.includes(s)){
+    const move=selected+s;
+    if(move===puzzle.answer){
+      board[p.r][p.c]=board[coords(selected).r][coords(selected).c];
+      board[coords(selected).r][coords(selected).c]=null;
+      solved=true; selected=null;targets=[];
+      $("status").innerHTML='<span class="ok">CHECKMATE! 🎉</span>';
+      $("moveText").textContent=puzzle.label;
+      $("subtitle").textContent="Excellent! You solved the critical move.";
+      $("nextBox").classList.remove("hidden");
+      $("nextPuzzle").focus();
+      draw();
+      return;
+    }
+    $("status").innerHTML='<span class="warn">Legal move, but not the mating move.</span>';
+    $("moveText").textContent="Try another legal destination.";
+    selected=null;targets=[];draw();return;
+  }
+
+  if(piece && colorOf(piece)==="w"){
+    selected=s;targets=getTargets(s);
+    $("status").textContent=targets.length?"Select a highlighted destination.":"No legal moves for this piece.";
+    $("moveText").textContent=targets.length ? `${PIECES[piece]} ${s} → choose a square` : "Choose another piece.";
+    draw();return;
+  }
+
+  selected=null;targets=[];draw();
+}
+
+function choosePuzzle(level=difficulty){
+  difficulty=level;
+  const pool=PUZZLES.filter(p=>p.level===difficulty);
+  let available=pool.filter(p=>!history.includes(p.name));
+  if(!available.length){history=[];available=pool}
+  puzzle=available[Math.floor(Math.random()*available.length)];
+  history.push(puzzle.name);
+  if(history.length>4)history.shift();
+
+  board=parseFen(puzzle.fen);
+  selected=null;targets=[];solved=false;
+
+  $("difficulty").value=difficulty;
+  $("title").textContent=`⚡ ${difficulty} — ${puzzle.name}`;
+  $("subtitle").textContent="White to move. Find the checkmate.";
+  $("status").textContent="Select a white piece to begin.";
+  $("moveText").textContent="No move yet.";
+  $("nextBox").classList.add("hidden");
+  draw();
+}
+
+$("difficulty").addEventListener("change",e=>choosePuzzle(e.target.value));
+$("newPuzzle").addEventListener("click",()=>choosePuzzle(difficulty));
+$("reset").addEventListener("click",()=>{
+  if(puzzle){
+    board=parseFen(puzzle.fen);selected=null;targets=[];solved=false;
+    $("status").textContent="Puzzle reset. Find the checkmate.";
+    $("moveText").textContent="No move yet.";
+    $("nextBox").classList.add("hidden");
+    draw();
+  }
+});
+$("nextPuzzle").addEventListener("click",()=>choosePuzzle(difficulty));
+$("harderPuzzle").addEventListener("click",()=>{
+  const next={Easy:"Medium",Medium:"Hard",Hard:"Hard"}[difficulty];
+  choosePuzzle(next);
+});
+
+choosePuzzle("Easy");
+</script>
+</body>
+</html>
