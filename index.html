@@ -1,9 +1,91 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aravinth CareerLab</title><link rel="stylesheet" href="styles.css"><script src="https://unpkg.com/mammoth@1.9.0/mammoth.browser.min.js"></script></head><body><header class="nav"><div class="wrap navin"><a class="brand" href="#">Aravinth.<span>CareerLab</span></a><nav class="navlinks"><a href="#resume">Resume</a><a href="#explorer">Experience</a><a href="#interview">Interview</a><a href="#learning">Learning</a><a href="#sources">Sources</a><a href="privacy.html">Privacy</a></nav></div></header><main class="wrap">
-<section class="hero"><div class="eyebrow">Resume-first AI career lab</div><h1>Your resume becomes your <span>interview map.</span></h1><p>Upload a PDF/DOCX, explore only what your resume supports, practise interviews, find skill gaps and use current technical sources without putting your API key in the browser.</p><div class="chips"><span class="chip">🔐 Secure AI</span><span class="chip">📄 Resume analysis</span><span class="chip">🧠 Experience Explorer</span><span class="chip">🎯 Resume questions</span><span class="chip">🎤 Mock interview</span><span class="chip">🌐 Current sources</span></div></section>
-<section id="resume"><div class="eyebrow">Resume Lab</div><h2 class="sectiontitle">Upload once. Explore everything.</h2><div class="grid2"><div class="card"><h3>📄 Upload resume</h3><p class="muted">PDF/DOCX is parsed locally in your browser. The original file is not stored.</p><input id="resumeFile" class="file" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"><div class="row" style="margin-top:12px"><button id="deleteBtn" class="danger">Delete resume now</button><button id="analyzeBtn" class="primary">Analyze with AI</button></div><div class="notice" style="margin-top:12px">✓ No resume database · ✓ No permanent browser storage · ✓ Clear session anytime<br>⚠️ AI mode sends selected resume text to the configured AI provider.</div><div id="fileStatus" class="status" style="margin-top:12px"><i class="dot"></i>No resume loaded</div></div><div class="card"><h3>Resume health</h3><div id="score" class="score">—</div><div class="bar"><i id="scorebar"></i></div><p id="scoreReason" class="muted">Upload a resume to generate analysis.</p><div id="analysisSummary" class="output">Your resume-specific results will appear here.</div></div></div><div class="card" style="margin-top:14px"><h3>🎯 Interview map from your resume</h3><div id="skillMap" class="skillmap muted">Your skills and likely interview areas will appear here.</div></div></section>
-<section id="explorer"><div class="eyebrow">Experience Explorer</div><h2 class="sectiontitle">Ask only what your resume supports.</h2><div class="grid2"><div class="card"><div class="row"><select id="exploreMode"><option value="experience">Explore my experience</option><option value="forgot">I forgot this experience</option><option value="project">Explain a project/architecture</option><option value="rewrite">Improve/rewrite my resume</option></select><input id="exploreTopic" placeholder="e.g. Release Management"></div><textarea id="exploreQuestion" class="textarea" placeholder="How should I explain this in an interview?"></textarea><button id="exploreBtn" class="primary">Ask CareerLab</button></div><div class="card"><h3>🧠 AI answer</h3><div id="exploreOutput" class="output">Upload a resume and ask a question.</div></div></div></section>
-<section id="interview"><div class="eyebrow">Interview Lab</div><h2 class="sectiontitle">Practice like the real interview.</h2><div class="grid2"><div class="card"><div class="row"><select id="interviewType"><option>Resume interview</option><option>Technical interview</option><option>Behavioral interview</option><option>Project deep dive</option></select><select id="careerDomain"></select></div><button id="startInterview" class="primary" style="margin-top:12px">Start mock interview</button><div id="interviewState" class="notice" style="margin-top:12px">No interview running.</div></div><div class="card"><div id="chat" class="chat"><div class="msg ai">Start a mock interview and I will ask one question at a time.</div></div><div class="row" style="margin-top:12px"><input id="answerInput" placeholder="Type your answer…"><button id="answerBtn" class="primary">Answer</button></div></div></div></section>
-<section id="learning"><div class="eyebrow">Skill-gap learning path</div><h2 class="sectiontitle">Learn → visualize → practise → explain.</h2><div id="learningGrid" class="grid"></div></section>
-<section id="architecture"><div class="eyebrow">Visual Lab</div><h2 class="sectiontitle">Project + architecture explanation.</h2><div class="card"><div id="diagramText" class="output">Ask CareerLab to generate a Mermaid flow/sequence diagram.</div></div></section>
-<section id="sources"><div class="eyebrow">Trusted sources</div><h2 class="sectiontitle">Prefer current, authoritative information.</h2><div class="card"><p class="muted">For current technical facts the Worker can use OpenAI web search, with domain restrictions for supported career areas. The AI is instructed to prefer official documentation and identify sources.</p><div id="sourceList"></div></div></section>
-</main><footer class="footer"><div class="wrap">© 2026 Aravinth V · CareerLab · <a href="privacy.html">Privacy</a></div></footer><script type="module" src="app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="CareerLab — resume-first AI interview and career learning lab.">
+<title>Aravinth CareerLab</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.9.0/mammoth.browser.min.js" defer></script>
+</head>
+<body>
+<header class="nav"><div class="wrap navin">
+<a class="brand" href="#top">Aravinth.<span>CareerLab</span></a>
+<nav><a href="#resume">Resume</a><a href="#experience">Experience</a><a href="#interview">Interview</a><a href="#learning">Learning</a><a href="#sources">Sources</a><a href="privacy.html">Privacy</a></nav>
+</div></header>
+<main id="top" class="wrap">
+<section class="hero">
+<div class="eyebrow">RESUME-FIRST AI CAREER LAB</div>
+<h1>Your resume becomes your <span>interview map.</span></h1>
+<p>Upload a PDF or DOCX, explore your real experience, practise resume-specific interviews, find skill gaps, explain projects and use current authoritative sources — without storing the resume on CareerLab.</p>
+<div class="chips"><span>🔐 Secure AI connection</span><span>📄 AI resume analysis</span><span>🧠 Experience Explorer</span><span>🎯 Resume questions</span><span>🎤 Mock interview</span><span>🔄 Follow-ups</span><span>📚 Skill gaps</span><span>🏗️ Architecture</span><span>🌐 Current sources</span><span>📝 Resume rewrite</span></div>
+</section>
+
+<section id="resume">
+<div class="eyebrow">RESUME LAB</div><h2>Your resume becomes your interview map.</h2>
+<div class="grid2">
+<div class="card">
+<h3>📄 Upload your resume</h3>
+<p class="muted">PDF and DOCX are read in your browser. The original file is not uploaded to GitHub Pages or stored in a database.</p>
+<input id="resumeFile" class="file" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+<div class="row actions"><button id="analyzeBtn" class="primary">Analyze with AI</button><button id="deleteBtn" class="danger">Delete resume now</button></div>
+<div id="fileStatus" class="status"><span class="dot"></span>No resume loaded</div>
+<div class="notice">✓ No resume database<br>✓ No localStorage/sessionStorage<br>✓ Resume state exists only in this page session<br>✓ Delete clears resume text, analysis, skills and interview state<br>⚠️ When AI is used, selected resume text is sent to the configured AI provider.</div>
+</div>
+<div class="card">
+<h3>📊 Resume health</h3><div id="score" class="score">—</div><div class="bar"><i id="scorebar"></i></div>
+<p id="scoreReason" class="muted">Upload a resume to generate analysis.</p>
+<div id="analysisSummary" class="output">Your resume-specific analysis will appear here.</div>
+</div>
+</div>
+<div class="card mapcard"><h3>🎯 Interview map from your resume</h3><div id="skillMap" class="skillmap empty">Your supported skills, evidence warnings and interview areas will appear here.</div></div>
+</section>
+
+<section id="experience">
+<div class="eyebrow">EXPERIENCE EXPLORER</div><h2>Ask questions without inventing experience.</h2>
+<div class="grid2">
+<div class="card">
+<div class="row"><select id="careerDomain"></select><select id="exploreMode">
+<option value="experience">Explore my experience</option><option value="resume_questions">Generate resume questions</option><option value="forgot">I forgot this experience</option><option value="project">Explain a project / architecture</option><option value="rewrite">Improve / rewrite my resume</option><option value="skill_gap">Build my skill-gap learning path</option>
+</select></div>
+<input id="exploreTopic" class="input" placeholder="Topic / project / skill (optional)">
+<textarea id="exploreQuestion" class="textarea" placeholder="Example: How should I explain this project in an interview?"></textarea>
+<div class="row actions"><button id="exploreBtn" class="primary">Ask CareerLab</button><button id="clearOutputBtn" class="secondary">Clear answer</button></div>
+</div>
+<div class="card"><h3>🧠 CareerLab answer</h3><div id="exploreOutput" class="output">Upload a resume and ask a question.</div><div id="exploreSources" class="sources"></div></div>
+</div>
+</section>
+
+<section id="interview">
+<div class="eyebrow">INTERVIEW LAB</div><h2>Practice like the real interview.</h2>
+<div class="grid2">
+<div class="card">
+<div class="row"><select id="interviewType"><option>Resume interview</option><option>Technical interview</option><option>Behavioral interview</option><option>Project deep dive</option><option>Hiring-manager interview</option></select><select id="difficulty"><option>Medium</option><option>Easy</option><option>Hard</option></select></div>
+<div class="row actions"><button id="startInterview" class="primary">Start mock interview</button><button id="stopInterview" class="danger">End interview</button></div>
+<div id="interviewState" class="notice">No interview running.</div>
+</div>
+<div class="card"><div id="chat" class="chat"><div class="msg ai">Start a mock interview and I will ask one question at a time.</div></div><div class="row answerrow"><input id="answerInput" class="input" placeholder="Type your answer…"><button id="answerBtn" class="primary">Answer</button></div></div>
+</div>
+</section>
+
+<section id="learning">
+<div class="eyebrow">SKILL-GAP LEARNING PATH</div><h2>Learn → visualize → practise → explain.</h2>
+<p class="muted">Select any topic to ask CareerLab for an interview-ready explanation. If a resume is loaded, the answer separates general knowledge from what the resume actually proves.</p>
+<div id="learningGrid" class="grid"></div>
+</section>
+
+<section id="architecture">
+<div class="eyebrow">PROJECT + VISUAL LAB</div><h2>Explain systems with diagrams.</h2>
+<div class="grid2"><div class="card"><h3>🏗️ Architecture guidance</h3><p class="muted">CareerLab can distinguish your resume evidence from a generic reference architecture.</p><button class="primary" id="architectureBtn">Generate architecture explanation</button></div><div class="card"><h3>📊 Mermaid diagram</h3><pre id="diagramText" class="diagram">Your Mermaid flow or sequence diagram will appear here.</pre><button class="secondary" id="copyDiagram">Copy Mermaid</button></div></div>
+</section>
+
+<section id="sources">
+<div class="eyebrow">TRUSTED SOURCES</div><h2>Prefer current, authoritative information.</h2>
+<div class="card"><p class="muted">Current technical questions can use web search through the server-side AI connection. The source policy prefers official documentation, standards, government guidance and release notes. Community sources are supporting context, not the primary authority.</p><div id="sourceList" class="sourceGrid"></div></div>
+</section>
+
+<section class="privacyBanner"><div><strong>🔒 Resume privacy</strong><p>Your resume is kept in browser memory for the active session. CareerLab does not intentionally save it to its own database or GitHub. When you delete the resume, the in-memory resume text, analysis, skills and interview context are cleared.</p></div><a href="privacy.html" class="secondary">Read privacy details</a></section>
+</main>
+<footer class="footer"><div class="wrap">© 2026 Aravinth V · CareerLab · <a href="privacy.html">Privacy</a></div></footer>
+<script type="module" src="app.js"></script>
+</body></html>

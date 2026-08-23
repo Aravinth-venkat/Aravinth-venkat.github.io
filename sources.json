@@ -1,1 +1,27 @@
-{"official":[["ServiceNow Docs","https://www.servicenow.com/docs/"],["ServiceNow Developer","https://developer.servicenow.com/"],["MDN Web Docs","https://developer.mozilla.org/"],["Microsoft Learn","https://learn.microsoft.com/"],["AWS Documentation","https://docs.aws.amazon.com/"],["GitHub Docs","https://docs.github.com/"],["Oracle Java Docs","https://docs.oracle.com/en/java/"],["Python Docs","https://docs.python.org/3/"]]}
+{
+  "official": [
+    ["ServiceNow Developer", "https://developer.servicenow.com/"],
+    ["ServiceNow Docs", "https://www.servicenow.com/docs/"],
+    ["MDN Web Docs", "https://developer.mozilla.org/"],
+    ["Microsoft Learn", "https://learn.microsoft.com/"],
+    ["AWS Documentation", "https://docs.aws.amazon.com/"],
+    ["Google Cloud Documentation", "https://cloud.google.com/docs"],
+    ["Oracle Java Documentation", "https://docs.oracle.com/en/java/"],
+    ["Python Documentation", "https://docs.python.org/3/"],
+    ["GitHub Docs", "https://docs.github.com/"],
+    ["Kubernetes Documentation", "https://kubernetes.io/docs/"],
+    ["Docker Docs", "https://docs.docker.com/"],
+    ["OWASP", "https://owasp.org/"],
+    ["CISA", "https://www.cisa.gov/"],
+    ["NIST", "https://www.nist.gov/"],
+    ["OpenAI Platform Docs", "https://platform.openai.com/docs/"],
+    ["React Docs", "https://react.dev/"],
+    ["Spring Docs", "https://docs.spring.io/"],
+    ["scikit-learn Docs", "https://scikit-learn.org/stable/"],
+    ["PyTorch Docs", "https://pytorch.org/docs/"],
+    ["Django Docs", "https://docs.djangoproject.com/"],
+    ["PostgreSQL Docs", "https://www.postgresql.org/docs/"],
+    ["Node.js Docs", "https://nodejs.org/docs/latest/api/"],
+    ["ISO", "https://www.iso.org/standards.html"]
+  ]
+}
