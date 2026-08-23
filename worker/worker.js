@@ -142,12 +142,12 @@ export default {
       if (!prompt.trim()) return json({ error: "Empty request" }, 400, env, origin);
 
       const payload = {
-        model: env.MODEL || "gpt-5.6",
-        store: false,
-        input: [
-          { role: "developer", content: SYSTEM },
-          { role: "user", content: prompt }
-        ]
+  model: env.MODEL || "gpt-5.6-luna",
+  store: false,
+  input: [
+    { role: "developer", content: SYSTEM },
+    { role: "user", content: prompt }
+  ]
       };
       if (web) {
         const domains = DOMAIN_SOURCES[body.domain] || [];
