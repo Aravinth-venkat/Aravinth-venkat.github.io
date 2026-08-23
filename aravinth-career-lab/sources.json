@@ -1,0 +1,50 @@
+{
+  "policy": "Prefer official documentation, official release notes and official developer resources. Community sources are secondary.",
+  "sources": [
+    {
+      "name": "ServiceNow Docs",
+      "url": "https://www.servicenow.com/docs/",
+      "tier": 1
+    },
+    {
+      "name": "ServiceNow Developer",
+      "url": "https://developer.servicenow.com/",
+      "tier": 1
+    },
+    {
+      "name": "Oracle Java",
+      "url": "https://docs.oracle.com/en/java/",
+      "tier": 1
+    },
+    {
+      "name": "Python Docs",
+      "url": "https://docs.python.org/3/",
+      "tier": 1
+    },
+    {
+      "name": "MDN Web Docs",
+      "url": "https://developer.mozilla.org/",
+      "tier": 1
+    },
+    {
+      "name": "Microsoft Learn",
+      "url": "https://learn.microsoft.com/",
+      "tier": 1
+    },
+    {
+      "name": "AWS Docs",
+      "url": "https://docs.aws.amazon.com/",
+      "tier": 1
+    },
+    {
+      "name": "Cisco Support",
+      "url": "https://www.cisco.com/c/en/us/support/index.html",
+      "tier": 1
+    },
+    {
+      "name": "GitHub Docs",
+      "url": "https://docs.github.com/",
+      "tier": 1
+    }
+  ]
+}
