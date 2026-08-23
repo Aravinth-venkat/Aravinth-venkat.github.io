@@ -1,14 +1,23 @@
-# CareerLab Worker
+# CareerLab AI Worker
 
-Secrets/variables:
-- Secret: `OPENAI_API_KEY`
-- Variable: `MODEL` = `gpt-5.6-luna`
-- Variable: `ALLOWED_ORIGIN` = `https://aravinth-venkat.github.io`
+Deploy this folder as a Cloudflare Worker.
 
-Cloudflare Workers Builds:
-- Root directory: `/worker`
-- Build command: empty
-- Deploy command: `npx wrangler deploy`
-- Non-production deploy command: `npx wrangler deploy`
+## Dashboard build settings
 
-Never commit the API key.
+Root directory: `/worker`
+
+Build command: leave empty
+
+Deploy command: `npx wrangler deploy`
+
+## Secret
+
+Create a Worker Secret:
+
+`OPENAI_API_KEY`
+
+Never put the API key in `vars`, `wrangler.jsonc`, GitHub Pages JavaScript, HTML, or the repository.
+
+## Test
+
+After deployment, open the Worker URL. A GET request intentionally returns a health message. The website uses POST.
