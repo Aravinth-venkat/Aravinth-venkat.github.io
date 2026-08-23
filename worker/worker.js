@@ -61,25 +61,61 @@ function originAllowed(env, origin) {
 function extractText(data) {
   if (!data) return "";
 
+  // Standard Workers AI text response
   if (typeof data.response === "string") {
-    return data.response;
+    return data.response.trim();
   }
 
+  // Some response formats
   if (typeof data.output_text === "string") {
-    return data.output_text;
+    return data.output_text.trim();
   }
 
   if (typeof data.text === "string") {
-    return data.text;
+    return data.text.trim();
   }
 
+  // Responses API style output
   if (Array.isArray(data.output)) {
     const parts = [];
 
     for (const item of data.output) {
-      for (const c of item?.content || []) {
-        if (typeof c?.text === "string") {
-          parts.push(c.text);
+      if (typeof item?.text === "string") {
+        parts.push(item.text);
+      }
+
+      for (const content of item?.content || []) {
+        if (typeof content?.text === "string") {
+          parts.push(content.text);
+        }
+
+        if (typeof content?.text?.value === "string") {
+          parts.push(content.text.value);
+        }
+      }
+    }
+
+    if (parts.length) {
+      return parts.join("\n").trim();
+    }
+  }
+
+  // Chat-completions style response
+  if (Array.isArray(data.choices)) {
+    const parts = [];
+
+    for (const choice of data.choices) {
+      const content = choice?.message?.content;
+
+      if (typeof content === "string") {
+        parts.push(content);
+      }
+
+      if (Array.isArray(content)) {
+        for (const item of content) {
+          if (typeof item?.text === "string") {
+            parts.push(item.text);
+          }
         }
       }
     }
@@ -492,16 +528,16 @@ export default {
       const answer = extractText(result);
 
       if (!answer) {
-        return json(
-          {
-            error: "AI returned an empty response.",
-            detail: result
-          },
-          502,
-          env,
-          origin
-        );
-      }
+  return json(
+    {
+      error: "AI returned an empty response.",
+      detail: JSON.stringify(result)
+    },
+    502,
+    env,
+    origin
+  );
+}
 
       return json(
         {
