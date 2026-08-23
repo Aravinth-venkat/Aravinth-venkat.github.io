@@ -147,10 +147,31 @@ const esc = x => String(x ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",
 const redact = x => String(x||"").replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi,"[EMAIL]").replace(/\b(?:\+?\d[\d\s().-]{8,}\d)\b/g,"[PHONE]");
 
 async function api(body){
-  if(AI_ENDPOINT.includes("YOUR-SUBDOMAIN")) throw new Error("Deploy the Cloudflare Worker first, then replace AI_ENDPOINT in app.js with your Worker URL.");
-  const r = await fetch(AI_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  if(AI_ENDPOINT.includes("YOUR-SUBDOMAIN")){
+    throw new Error(
+      "Deploy the Cloudflare Worker first, then replace AI_ENDPOINT in app.js with your Worker URL."
+    );
+  }
+
+  const r = await fetch(AI_ENDPOINT,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify(body)
+  });
+
   const d = await r.json().catch(()=>({}));
-  if(!r.ok) throw new Error(d.error || "AI request failed");
+
+  if(!r.ok){
+    const detail = d.detail || d.message || "";
+    throw new Error(
+      detail
+        ? `${d.error || "AI request failed"}: ${detail}`
+        : (d.error || "AI request failed")
+    );
+  }
+
   return d;
 }
 
@@ -176,9 +197,17 @@ async function loadResume(file){
     let text=file.name.toLowerCase().endsWith(".pdf")?await pdfText(file):await docxText(file);
     text=text.replace(/\u0000/g,"").replace(/[ \t]+\n/g,"\n").slice(0,36000).trim();
     if(text.length<80)throw new Error("Not enough readable text. Try a text-based PDF or DOCX.");
-    state.fileName=file.name;state.resumeText=text;state.skills=[];state.analysis=null;
-    $("fileStatus").innerHTML="<span class='dot'></span>"+esc(file.name)+" · browser memory only";
-    resetResumeUI(false);
+    state.fileName=file.name;
+state.resumeText=text;
+state.skills=[];
+state.analysis=null;
+
+resetResumeUI(false);
+
+$("fileStatus").innerHTML =
+  "<span class='dot'></span>" +
+  esc(file.name) +
+  " · browser memory only";
   }catch(e){$("fileStatus").textContent="⚠️ "+e.message;}
 }
 
