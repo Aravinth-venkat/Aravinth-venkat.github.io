@@ -1,8 +1,145 @@
 /* CareerLab — no API key in browser. Replace only AI_ENDPOINT after Worker deployment. */
 const AI_ENDPOINT = "https://careerlab-ai.leoaravind007.workers.dev"; // careerlab-ai.leoaravind007.workers.dev
 
-const DOMAINS = ["ServiceNow","Software Engineering","Cloud / AWS","DevOps","Java","Python","Data / AI","Cybersecurity","Frontend / Web","Backend / APIs","ITSM / IT Operations","Mechanical / Engineering","Business / Finance","Custom"];
-const TOPICS = ["Incident Mconst pdfjs = await import(\"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs\");anagement","Problem Management","Change Management","Release Management","CMDB","CSDM","REST Integration","Flow Designer","Business Rules","Client Scripts","Virtual Agent","Now Assist / AI","ITOM","Service Catalog","API Design","System Design","Cloud Architecture","DevOps","Cybersecurity","Python","Java","Data Structures","SQL","Machine Learning","Project Management"];
+const DOMAINS = [
+  // IT & Technology
+  "ServiceNow",
+  "Software Engineering",
+  "Frontend Development",
+  "Backend Development",
+  "Full Stack Development",
+  "Mobile Development",
+  "Java",
+  "Python",
+  "JavaScript / TypeScript",
+  "C / C++",
+  "Data Structures & Algorithms",
+  "Data Engineering",
+  "Data Science",
+  "Artificial Intelligence / Machine Learning",
+  "Generative AI",
+  "Cloud / AWS",
+  "Microsoft Azure",
+  "Google Cloud",
+  "DevOps",
+  "SRE",
+  "Cybersecurity",
+  "Networking",
+  "Database / SQL",
+  "API / Integration",
+  "System Design",
+  "Solution Architecture",
+  "IT Support",
+  "IT Operations",
+  "ITSM",
+  "CRM",
+  "SAP",
+  "Salesforce",
+  "Testing / QA",
+  "Automation Testing",
+  "Embedded Systems",
+  "Electronics / Electrical",
+  "Mechanical / Engineering",
+
+  // Business & Corporate
+  "Business Analysis",
+  "Product Management",
+  "Project Management",
+  "Program Management",
+  "Operations",
+  "Supply Chain",
+  "Procurement",
+  "Quality Management",
+  "Risk Management",
+  "Compliance",
+  "Consulting",
+
+  // Finance & Accounting
+  "Finance",
+  "Accounting",
+  "Banking",
+  "Investment Banking",
+  "Financial Analysis",
+  "Audit",
+  "Taxation",
+  "Insurance",
+  "FinTech",
+
+  // Sales & Marketing
+  "Sales",
+  "Business Development",
+  "Marketing",
+  "Digital Marketing",
+  "Product Marketing",
+  "Market Research",
+  "Customer Success",
+  "Customer Support",
+
+  // HR & People
+  "Human Resources",
+  "Recruitment / Talent Acquisition",
+  "Learning & Development",
+  "Payroll",
+  "Employee Relations",
+
+  // Engineering & Core Industries
+  "Mechanical Engineering",
+  "Civil Engineering",
+  "Electrical Engineering",
+  "Electronics Engineering",
+  "Automobile Engineering",
+  "Aerospace Engineering",
+  "Manufacturing",
+  "Production Engineering",
+  "Industrial Engineering",
+  "Quality Engineering",
+
+  // Other Professional Careers
+  "Healthcare",
+  "Pharmaceutical",
+  "Legal",
+  "Education",
+  "Research",
+  "Architecture / Design",
+  "Content / Writing",
+  "Media",
+  "Hospitality",
+  "Retail",
+  "Logistics",
+  "Entrepreneurship",
+
+  // Flexible
+  "Other IT",
+  "Other Non-IT",
+  "Custom"
+];
+const TOPICS = [
+  "Incident Management",
+  "Problem Management",
+  "Change Management",
+  "Release Management",
+  "CMDB",
+  "CSDM",
+  "REST Integration",
+  "Flow Designer",
+  "Business Rules",
+  "Client Scripts",
+  "Virtual Agent",
+  "Now Assist / AI",
+  "ITOM",
+  "Service Catalog",
+  "API Design",
+  "System Design",
+  "Cloud Architecture",
+  "DevOps",
+  "Cybersecurity",
+  "Python",
+  "Java",
+  "Data Structures",
+  "SQL",
+  "Machine Learning",
+  "Project Management"
+];
 
 let state = { fileName:"", resumeText:"", skills:[], analysis:null, domain:"ServiceNow", interview:{running:false,type:"",difficulty:"Medium",question:"",turns:[]} };
 const $ = id => document.getElementById(id);
