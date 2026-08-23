@@ -114,33 +114,141 @@ const DOMAINS = [
   "Custom"
 ];
 const TOPICS = [
+  // IT / Software
+  "Software Development",
+  "Frontend Development",
+  "Backend Development",
+  "Full Stack Development",
+  "Mobile Development",
+  "Java",
+  "Python",
+  "JavaScript / TypeScript",
+  "C / C++",
+  "Data Structures & Algorithms",
+  "Object-Oriented Programming",
+  "Database / SQL",
+  "REST APIs",
+  "API Integration",
+  "System Design",
+  "Solution Architecture",
+
+  // Service Management / Enterprise IT
   "Incident Management",
   "Problem Management",
   "Change Management",
   "Release Management",
   "CMDB",
   "CSDM",
-  "REST Integration",
+  "ITSM",
+  "ITOM",
+  "Service Catalog",
   "Flow Designer",
   "Business Rules",
   "Client Scripts",
   "Virtual Agent",
   "Now Assist / AI",
-  "ITOM",
-  "Service Catalog",
-  "API Design",
-  "System Design",
-  "Cloud Architecture",
-  "DevOps",
-  "Cybersecurity",
-  "Python",
-  "Java",
-  "Data Structures",
-  "SQL",
-  "Machine Learning",
-  "Project Management"
-];
 
+  // Cloud / DevOps
+  "Cloud Architecture",
+  "AWS",
+  "Microsoft Azure",
+  "Google Cloud",
+  "DevOps",
+  "CI/CD",
+  "Docker",
+  "Kubernetes",
+  "Site Reliability Engineering",
+  "Infrastructure as Code",
+
+  // Data / AI
+  "Data Engineering",
+  "Data Science",
+  "Machine Learning",
+  "Generative AI",
+  "Prompt Engineering",
+  "AI Agents",
+  "Data Analytics",
+  "SQL Analytics",
+
+  // Security
+  "Cybersecurity",
+  "Application Security",
+  "Cloud Security",
+  "Network Security",
+  "Security Operations",
+  "OWASP",
+
+  // Testing
+  "Software Testing",
+  "Manual Testing",
+  "Automation Testing",
+  "API Testing",
+  "Performance Testing",
+  "Quality Assurance",
+
+  // Business
+  "Business Analysis",
+  "Product Management",
+  "Project Management",
+  "Program Management",
+  "Operations Management",
+  "Process Improvement",
+  "Consulting",
+
+  // Finance
+  "Financial Analysis",
+  "Accounting",
+  "Banking",
+  "Investment Banking",
+  "Audit",
+  "Taxation",
+  "Risk Management",
+  "FinTech",
+
+  // Sales / Marketing
+  "Sales",
+  "Business Development",
+  "Marketing",
+  "Digital Marketing",
+  "Product Marketing",
+  "Market Research",
+  "Customer Success",
+  "Customer Support",
+
+  // HR
+  "Human Resources",
+  "Recruitment",
+  "Talent Acquisition",
+  "Learning & Development",
+  "Payroll",
+  "Employee Relations",
+
+  // Core Engineering
+  "Mechanical Engineering",
+  "Civil Engineering",
+  "Electrical Engineering",
+  "Electronics Engineering",
+  "Automobile Engineering",
+  "Aerospace Engineering",
+  "Manufacturing",
+  "Production Engineering",
+  "Industrial Engineering",
+  "Quality Engineering",
+
+  // Professional
+  "Healthcare",
+  "Pharmaceutical",
+  "Legal",
+  "Education",
+  "Research",
+  "Architecture / Design",
+  "Content Writing",
+  "Media",
+  "Hospitality",
+  "Retail",
+  "Logistics",
+  "Entrepreneurship"
+];
 let state = { fileName:"", resumeText:"", skills:[], analysis:null, domain:"ServiceNow", interview:{running:false,type:"",difficulty:"Medium",question:"",turns:[]} };
 const $ = id => document.getElementById(id);
 const esc = x => String(x ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));
