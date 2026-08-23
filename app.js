@@ -1,8 +1,8 @@
 /* CareerLab — no API key in browser. Replace only AI_ENDPOINT after Worker deployment. */
-const AI_ENDPOINT = "https://careerlab-ai.YOUR-SUBDOMAIN.workers.dev";
+const AI_ENDPOINT = "https://careerlab-ai.leoaravind007.workers.dev"; // careerlab-ai.leoaravind007.workers.dev
 
 const DOMAINS = ["ServiceNow","Software Engineering","Cloud / AWS","DevOps","Java","Python","Data / AI","Cybersecurity","Frontend / Web","Backend / APIs","ITSM / IT Operations","Mechanical / Engineering","Business / Finance","Custom"];
-const TOPICS = ["Incident Management","Problem Management","Change Management","Release Management","CMDB","CSDM","REST Integration","Flow Designer","Business Rules","Client Scripts","Virtual Agent","Now Assist / AI","ITOM","Service Catalog","API Design","System Design","Cloud Architecture","DevOps","Cybersecurity","Python","Java","Data Structures","SQL","Machine Learning","Project Management"];
+const TOPICS = ["Incident Mconst pdfjs = await import(\"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs\");anagement","Problem Management","Change Management","Release Management","CMDB","CSDM","REST Integration","Flow Designer","Business Rules","Client Scripts","Virtual Agent","Now Assist / AI","ITOM","Service Catalog","API Design","System Design","Cloud Architecture","DevOps","Cybersecurity","Python","Java","Data Structures","SQL","Machine Learning","Project Management"];
 
 let state = { fileName:"", resumeText:"", skills:[], analysis:null, domain:"ServiceNow", interview:{running:false,type:"",difficulty:"Medium",question:"",turns:[]} };
 const $ = id => document.getElementById(id);
