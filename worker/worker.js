@@ -131,163 +131,101 @@ function originAllowed(env, origin) {
 /* =========================================================
    CLOUDFLARE WORKERS AI RESPONSE EXTRACTION
 ========================================================= */
-
 function extractText(data) {
+  if (!data) return "";
 
-  if (!data) {
-    return "";
-  }
-
-
-  /*
-   * Standard Cloudflare Workers AI response
-   *
-   * Example:
-   * {
-   *   response: "Hello..."
-   * }
-   */
-
-  if (
-    typeof data.response === "string"
-  ) {
-
+  // Cloudflare Workers AI native response
+  if (typeof data.response === "string") {
     return data.response.trim();
   }
 
-
-  /*
-   * Some compatible response formats
-   */
-
-  if (
-    typeof data.output_text === "string"
-  ) {
-
-    return data.output_text.trim();
-  }
-
-
-  if (
-    typeof data.text === "string"
-  ) {
-
+  // Generic text response
+  if (typeof data.text === "string") {
     return data.text.trim();
   }
 
-
-  /*
-   * Responses API style output
-   */
-
-  if (
-    Array.isArray(data.output)
-  ) {
-
-    const parts = [];
-
-    for (
-      const item of data.output
-    ) {
-
-      if (
-        typeof item?.text === "string"
-      ) {
-
-        parts.push(item.text);
-      }
-
-
-      for (
-        const content of
-        item?.content || []
-      ) {
-
-        if (
-          typeof content?.text === "string"
-        ) {
-
-          parts.push(
-            content.text
-          );
-        }
-
-
-        if (
-          typeof content?.text?.value === "string"
-        ) {
-
-          parts.push(
-            content.text.value
-          );
-        }
-      }
-    }
-
-
-    if (parts.length) {
-
-      return parts
-        .join("\n")
-        .trim();
-    }
+  // OpenAI-compatible output_text
+  if (typeof data.output_text === "string") {
+    return data.output_text.trim();
   }
 
-
-  /*
-   * Chat-completions style response
-   */
-
-  if (
-    Array.isArray(data.choices)
-  ) {
-
+  // OpenAI-compatible chat completion
+  if (Array.isArray(data.choices)) {
     const parts = [];
 
-    for (
-      const choice of data.choices
-    ) {
+    for (const choice of data.choices) {
+      const message = choice?.message;
 
-      const content =
-        choice?.message?.content;
+      if (!message) continue;
 
-
-      if (
-        typeof content === "string"
-      ) {
-
-        parts.push(content);
+      // Normal response
+      if (typeof message.content === "string") {
+        parts.push(message.content);
       }
 
+      // Content array
+      if (Array.isArray(message.content)) {
+        for (const item of message.content) {
+          if (typeof item?.text === "string") {
+            parts.push(item.text);
+          }
 
-      if (
-        Array.isArray(content)
-      ) {
-
-        for (
-          const item of content
-        ) {
-
-          if (
-            typeof item?.text === "string"
-          ) {
-
-            parts.push(
-              item.text
-            );
+          if (typeof item?.text?.value === "string") {
+            parts.push(item.text.value);
           }
         }
       }
-    }
 
+      // GPT-OSS reasoning response
+      if (typeof message.reasoning === "string") {
+        parts.push(message.reasoning);
+      }
+
+      if (typeof message.reasoning_content === "string") {
+        parts.push(message.reasoning_content);
+      }
+    }
 
     if (parts.length) {
-
-      return parts
-        .join("\n")
-        .trim();
+      return parts.join("\n").trim();
     }
   }
+
+  // Generic output array
+  if (Array.isArray(data.output)) {
+    const parts = [];
+
+    for (const item of data.output) {
+      if (typeof item?.text === "string") {
+        parts.push(item.text);
+      }
+
+      if (typeof item?.reasoning === "string") {
+        parts.push(item.reasoning);
+      }
+
+      if (typeof item?.reasoning_content === "string") {
+        parts.push(item.reasoning_content);
+      }
+
+      for (const content of item?.content || []) {
+        if (typeof content?.text === "string") {
+          parts.push(content.text);
+        }
+
+        if (typeof content?.text?.value === "string") {
+          parts.push(content.text.value);
+        }
+      }
+    }
+
+    if (parts.length) {
+      return parts.join("\n").trim();
+    }
+  }
+
+  return "";
+}
 
 
   return "";
