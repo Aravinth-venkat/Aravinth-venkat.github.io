@@ -999,35 +999,23 @@ export default {
          The AI binding is provided by Cloudflare.
       =================================================== */
 
-      const result =
-        await env.AI.run(
-
-          "@cf/openai/gpt-oss-20b",
-
-          {
-
-            messages: [
-
-              {
-                role:
-                  "system",
-
-                content:
-                  SYSTEM
-              },
-
-              {
-                role:
-                  "user",
-
-                content:
-                  prompt
-              }
-
-            ]
-
-          }
-        );
+      const result = await env.AI.run(
+  "@cf/openai/gpt-oss-20b",
+  {
+    messages: [
+      {
+        role: "system",
+        content: SYSTEM
+      },
+      {
+        role: "user",
+        content: prompt
+      }
+    ],
+    max_tokens: 2048,
+    temperature: 0.2
+  }
+);
 
 
       /* ===================================================
