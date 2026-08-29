@@ -2,6 +2,8 @@ const AI_ENDPOINT="https://careerlab-ai.leoaravind007.workers.dev";
 
 const DOMAINS=["ServiceNow","Software Engineering","Frontend Development","Backend Development","Full Stack Development","Mobile Development","Java","Python","JavaScript / TypeScript","Data Structures & Algorithms","Data Engineering","Data Science","Artificial Intelligence / Machine Learning","Generative AI","Cloud / AWS","Microsoft Azure","Google Cloud","DevOps","SRE","Cybersecurity","Networking","Database / SQL","API / Integration","System Design","Solution Architecture","IT Support","IT Operations","ITSM","CRM","SAP","Salesforce","Testing / QA","Business Analysis","Product Management","Project Management","Operations","Supply Chain","Finance","Accounting","Banking","Marketing","Human Resources","Healthcare","Legal","Education","Manufacturing","Other IT","Other Non-IT","Custom"];
 
+const LOCATIONS=["Chennai","Bengaluru","Hyderabad","Pune","Mumbai","Delhi NCR","Noida","Gurugram","Kolkata","Coimbatore","Madurai","Trichy","Ahmedabad","Jaipur","Kochi","Thiruvananthapuram","Visakhapatnam","Chandigarh","Indore","Remote","India"];
+
 let state={fileName:"",resumeText:"",skills:[],analysis:null,domain:"ServiceNow",isPro:localStorage.getItem("careerlab_plan")==="pro",interview:{running:false,type:"",difficulty:"Medium",question:"",turns:[]}};
 const $=id=>document.getElementById(id);
 const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));
@@ -50,7 +52,9 @@ async function loadResume(file){
 
 function resetResumeUI(full=true){
   if(full){state={fileName:"",resumeText:"",skills:[],analysis:null,domain:$("careerDomain")?.value||"ServiceNow",isPro:localStorage.getItem("careerlab_plan")==="pro",interview:{running:false,type:"",difficulty:"Medium",question:"",turns:[]}};if($("resumeFile"))$("resumeFile").value="";}
-  $("score").textContent="—";$("scorebar").style.width="0";$("scoreReason").textContent="Upload a resume to generate analysis.";$("analysisSummary").textContent="Your resume-specific analysis will appear here.";$("skillMap").innerHTML="Your supported skills, evidence warnings and interview areas will appear here.";$("skillMap").className="skillmap empty";$("exploreOutput").textContent="Upload a resume and ask a question.";$("exploreSources").innerHTML="";$("chat").innerHTML="<div class='msg ai'>Start a mock interview and I will ask one question at a time.</div>";$("sampleAnswer").textContent="Sample answer guidance will appear after you submit an interview answer.";$("interviewState").textContent="No interview running.";renderLearningLab();
+  $("score").textContent="—";$("scorebar").style.width="0";$("scoreReason").textContent="Upload a resume to generate analysis.";$("analysisSummary").textContent="Your resume-specific analysis will appear here.";$("skillMap").innerHTML="Your supported skills, evidence warnings and interview areas will appear here.";$("skillMap").className="skillmap empty";
+  $("exploreOutput").innerHTML=`<div class="careerlab-answer"><div class="careerlab-answer-header"><div><div class="careerlab-brand">CareerLab Guidance</div><div class="careerlab-subtitle">Ask CareerLab a question about your resume or interview preparation.</div></div><span class="careerlab-badge">CAREERLAB</span></div><div class="careerlab-content"><p>Upload a resume and ask CareerLab a question.</p></div></div>`;
+  $("exploreSources").innerHTML="";$("chat").innerHTML="<div class='msg ai'>Start a mock interview and I will ask one question at a time.</div>";$("sampleAnswer").textContent="Sample answer guidance will appear after you submit an interview answer.";$("interviewState").textContent="No interview running.";renderLearningLab();
   if(full)$("fileStatus").innerHTML="<span class='dot'></span>No resume loaded";
 }
 
@@ -58,105 +62,29 @@ function parseJson(text){try{return JSON.parse(text)}catch{}const m=String(text|
 
 function formatCareerLabAnswer(text){
   let value=String(text||"").replace(/\r/g,"").trim();
-
   if(!value){
-    return `
-      <div class="careerlab-answer">
-        <div class="careerlab-brand">CareerLab Guidance</div>
-        <div class="careerlab-note">CareerLab could not generate an answer. Please try again.</div>
-      </div>
-    `;
+    return `<div class="careerlab-answer"><div class="careerlab-answer-header"><div><div class="careerlab-brand">CareerLab Guidance</div><div class="careerlab-subtitle">CareerLab could not generate an answer.</div></div><span class="careerlab-badge">CAREERLAB</span></div><div class="careerlab-content"><p>Please try the question again.</p></div></div>`;
   }
 
-  value=value
-    .replace(/```(?:markdown|md|text|json)?/gi,"")
-    .replace(/```/g,"")
-    .replace(/\*\*/g,"")
-    .replace(/__/g,"")
-    .replace(/~~/g,"")
-    .replace(/\|/g," ")
-    .replace(/^\s*[-*•]\s*/gm,"")
-    .replace(/^\s*#{1,6}\s*/gm,"")
-    .replace(/^\s*\d+\.\s+(?=[A-Z])/gm,"")
-    .replace(/[ \t]+/g," ")
-    .replace(/\n{3,}/g,"\n\n")
-    .trim();
+  value=value.replace(/```(?:markdown|md|text|json)?/gi,"").replace(/```/g,"").replace(/\*\*/g,"").replace(/__/g,"").replace(/~~/g,"").replace(/\|/g," ").replace(/^\s*[-*•]\s*/gm,"").replace(/^\s*#{1,6}\s*/gm,"").replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim();
 
-  const lines=value.split("\n");
-  let html="";
-  let paragraph=[];
-
-  function flushParagraph(){
-    if(!paragraph.length)return;
-    const p=paragraph.join(" ").trim();
-    if(p){
-      html+=`<p>${esc(p)}</p>`;
-    }
-    paragraph=[];
-  }
+  const lines=value.split("\n");let html="";let paragraph=[];
+  function flushParagraph(){if(!paragraph.length)return;const p=paragraph.join(" ").trim();if(p)html+=`<p>${esc(p)}</p>`;paragraph=[];}
 
   for(const rawLine of lines){
     const line=rawLine.trim();
-
-    if(!line){
-      flushParagraph();
-      continue;
-    }
-
-    const headingMatch=line.match(
-      /^(What your resume proves|What this topic normally means|Simple memory explanation|How to discuss this safely in an interview|What the candidate should verify before claiming it|Example interview wording|Resume evidence|General knowledge|Safe interview explanation|Follow-up questions|Current skills|Gaps|Priority order|Learning plan|What is good|What is missing|What is unclear|Unsupported claims|How to improve|Sample answer template)\s*:?\s*$/i
-    );
-
-    if(headingMatch){
-      flushParagraph();
-      html+=`<h3>${esc(headingMatch[1])}</h3>`;
-      continue;
-    }
-
-    const numberedHeading=line.match(
-      /^\d+\.\s*(.+)$/i
-    );
-
-    if(numberedHeading && numberedHeading[1].length<100){
-      flushParagraph();
-      html+=`<h3>${esc(numberedHeading[1])}</h3>`;
-      continue;
-    }
-
+    if(!line){flushParagraph();continue;}
+    const headingMatch=line.match(/^(What your resume proves|What this topic normally means|Simple memory explanation|How to discuss this safely in an interview|What the candidate should verify before claiming it|Example interview wording|Resume evidence|General knowledge|Safe interview explanation|Follow-up questions|Current skills|Gaps|Priority order|Learning plan|What is good|What is missing|What is unclear|Unsupported claims|How to improve|Sample answer template|CareerLab Guidance|What to learn next)\s*:?\s*$/i);
+    if(headingMatch){flushParagraph();html+=`<h3>${esc(headingMatch[1])}</h3>`;continue;}
+    const numberedHeading=line.match(/^\d+\.\s*(.+)$/i);
+    if(numberedHeading&&numberedHeading[1].length<100){flushParagraph();html+=`<h3>${esc(numberedHeading[1])}</h3>`;continue;}
     const bullet=line.match(/^[-*•]\s*(.+)$/);
-
-    if(bullet){
-      flushParagraph();
-      html+=`<div class="careerlab-point">${esc(bullet[1])}</div>`;
-      continue;
-    }
-
+    if(bullet){flushParagraph();html+=`<div class="careerlab-point">${esc(bullet[1])}</div>`;continue;}
     paragraph.push(line);
   }
-
   flushParagraph();
 
-  return `
-    <div class="careerlab-answer">
-      <div class="careerlab-answer-header">
-        <div>
-          <div class="careerlab-brand">CareerLab Guidance</div>
-          <div class="careerlab-subtitle">Personalized guidance based on your resume</div>
-        </div>
-        <span class="careerlab-badge">CAREERLAB</span>
-      </div>
-
-      <div class="careerlab-content">
-        ${html}
-      </div>
-
-      <div class="careerlab-footer">
-        <strong>CareerLab note:</strong>
-        This guidance is generated from your resume and CareerLab's interview coaching logic.
-        Only claim experience that you can confidently explain in an interview.
-      </div>
-    </div>
-  `;
+  return `<div class="careerlab-answer"><div class="careerlab-answer-header"><div><div class="careerlab-brand">CareerLab Guidance</div><div class="careerlab-subtitle">Personalized guidance based on your resume</div></div><span class="careerlab-badge">CAREERLAB</span></div><div class="careerlab-content">${html}</div><div class="careerlab-footer"><strong>CareerLab note:</strong> This guidance is generated from your resume and CareerLab's interview coaching logic. Only claim experience that you can confidently explain in an interview.</div></div>`;
 }
 
 async function analyze(){
@@ -166,7 +94,13 @@ async function analyze(){
     const d=await api({mode:"resume_analysis",domain:state.domain,resumeText:redact(state.resumeText)});
     const j=d.analysis||parseJson(d.answer)||{};state.analysis=j;state.skills=Array.isArray(j.skills)?j.skills:[];
     const score=Math.max(0,Math.min(100,Number(j.score)||0));$("score").textContent=score+"/100";$("scorebar").style.width=score+"%";$("scoreReason").textContent=j.summary||"Analysis completed.";
-    $("analysisSummary").textContent=[j.strengths?.length?"Strengths:\n• "+j.strengths.join("\n• "):"",j.gaps?.length?"Gaps:\n• "+j.gaps.join("\n• "):"",j.evidenceWarnings?.length?"Evidence warnings:\n• "+j.evidenceWarnings.join("\n• "):"",j.interviewAreas?.length?"Interview areas:\n• "+j.interviewAreas.join("\n• "):"",j.learningPath?.length?"Learning path:\n• "+j.learningPath.join("\n• "):""].filter(Boolean).join("\n\n")||d.answer||"Analysis completed.";
+    $("analysisSummary").innerHTML=formatCareerLabAnswer([
+      "Resume evidence",
+      j.summary||"Analysis completed.",
+      j.strengths?.length?"Strengths:":"",j.strengths?.join(". ")||"",
+      j.gaps?.length?"Gaps:":"",j.gaps?.join(". ")||"",
+      j.evidenceWarnings?.length?"Evidence warnings:":"",j.evidenceWarnings?.join(". ")||""
+    ].filter(Boolean).join("\n\n"));
     const tags=[...new Set([...state.skills,...(j.interviewAreas||[])])];$("skillMap").className="skillmap";$("skillMap").innerHTML=tags.length?tags.map(x=>`<span class="skill">${esc(x)}</span>`).join(""):"No supported skills detected yet.";
     updateJobDefaults();renderLearningLab();
   }catch(e){$("analysisSummary").textContent="⚠️ "+e.message;}
@@ -177,9 +111,19 @@ function renderSources(sources){$("exploreSources").innerHTML=(sources||[]).map(
 
 async function explore(){
   if(!state.resumeText){alert("Upload a resume first.");return;}
-  const mode=$("exploreMode").value;if(["project","skill_gap"].includes(mode)&&!state.isPro){openUpgrade();return;}
-  $("exploreOutput").textContent="Thinking…";$("exploreSources").innerHTML="";
-  try{const d=await api({mode,resumeText:redact(state.resumeText),domain:state.domain,topic:$("exploreTopic").value,question:$("exploreQuestion").value});$("exploreOutput").textContent=d.answer||"No answer returned.";renderSources(d.sources);}catch(e){$("exploreOutput").textContent="⚠️ "+e.message;}
+  const mode=$("exploreMode").value;
+  if(["project","skill_gap"].includes(mode)&&!state.isPro){openUpgrade();return;}
+
+  $("exploreOutput").innerHTML=`<div class="careerlab-answer"><div class="careerlab-answer-header"><div><div class="careerlab-brand">CareerLab Guidance</div><div class="careerlab-subtitle">CareerLab is preparing your personalized answer…</div></div><span class="careerlab-badge">CAREERLAB</span></div><div class="careerlab-content"><p>Analyzing your resume and preparing interview guidance…</p></div></div>`;
+  $("exploreSources").innerHTML="";
+
+  try{
+    const d=await api({mode,resumeText:redact(state.resumeText),domain:state.domain,topic:$("exploreTopic").value,question:$("exploreQuestion").value});
+    $("exploreOutput").innerHTML=formatCareerLabAnswer(d.answer||"No answer returned.");
+    renderSources(d.sources);
+  }catch(e){
+    $("exploreOutput").innerHTML=`<div class="careerlab-answer"><div class="careerlab-answer-header"><div><div class="careerlab-brand">CareerLab Guidance</div><div class="careerlab-subtitle">CareerLab could not complete this answer.</div></div><span class="careerlab-badge">CAREERLAB</span></div><div class="careerlab-content"><p>${esc(e.message)}</p></div></div>`;
+  }
 }
 
 async function startInterview(){
@@ -188,16 +132,29 @@ async function startInterview(){
 }
 
 async function nextInterview(instruction){
-  try{const d=await api({mode:"mock_interview",resumeText:redact(state.resumeText),domain:state.domain,interviewType:state.interview.type,difficulty:state.interview.difficulty,history:state.interview.turns,instruction});state.interview.question=d.answer||"Tell me about one project on your resume.";$("chat").insertAdjacentHTML("beforeend",`<div class="msg ai">${esc(state.interview.question)}</div>`);$("chat").scrollTop=$("chat").scrollHeight;}catch(e){$("chat").insertAdjacentHTML("beforeend",`<div class="msg ai">⚠️ ${esc(e.message)}</div>`);}
+  try{
+    const d=await api({mode:"mock_interview",resumeText:redact(state.resumeText),domain:state.domain,interviewType:state.interview.type,difficulty:state.interview.difficulty,history:state.interview.turns,instruction});
+    state.interview.question=d.answer||"Tell me about one project on your resume.";
+    $("chat").insertAdjacentHTML("beforeend",`<div class="msg ai">${esc(state.interview.question)}</div>`);
+    $("chat").scrollTop=$("chat").scrollHeight;
+  }catch(e){$("chat").insertAdjacentHTML("beforeend",`<div class="msg ai">⚠️ ${esc(e.message)}</div>`);}
 }
 
 async function evaluateInterviewAnswer(answer){
   if(!state.isPro){$("sampleAnswer").textContent="Upgrade to CareerLab Pro for detailed answer improvement and sample answer guidance.";return;}
-  try{const d=await api({mode:"interview_feedback",resumeText:redact(state.resumeText),domain:state.domain,question:state.interview.question,answer});$("sampleAnswer").textContent=d.answer||"No sample guidance returned.";}catch(e){$("sampleAnswer").textContent="⚠️ "+e.message;}
+  try{
+    const d=await api({mode:"interview_feedback",resumeText:redact(state.resumeText),domain:state.domain,question:state.interview.question,answer});
+    $("sampleAnswer").innerHTML=formatCareerLabAnswer(d.answer||"No sample guidance returned.");
+  }catch(e){$("sampleAnswer").textContent="⚠️ "+e.message;}
 }
 
 async function answerInterview(){
-  const answer=$("answerInput").value.trim();if(!answer||!state.interview.running)return;$("chat").insertAdjacentHTML("beforeend",`<div class="msg user">${esc(answer)}</div>`);state.interview.turns.push({question:state.interview.question,answer});$("answerInput").value="";await evaluateInterviewAnswer(answer);await nextInterview("Briefly evaluate the previous answer, then ask one focused follow-up question. If the answer claims unsupported experience, ask the candidate to verify it.");
+  const answer=$("answerInput").value.trim();if(!answer||!state.interview.running)return;
+  $("chat").insertAdjacentHTML("beforeend",`<div class="msg user">${esc(answer)}</div>`);
+  state.interview.turns.push({question:state.interview.question,answer});
+  $("answerInput").value="";
+  await evaluateInterviewAnswer(answer);
+  await nextInterview("Briefly evaluate the previous answer, then ask one focused follow-up question. If the answer claims unsupported experience, ask the candidate to verify it.");
 }
 
 function stopInterview(){state.interview.running=false;$("interviewState").textContent="Interview ended. Your interview data remains only in this page memory until you reload or delete the resume.";}
@@ -214,20 +171,85 @@ function renderLearningLab(){
 
 function updateJobDefaults(){$("jobKeyword").value=state.skills.slice(0,2).join(" ")||state.domain;}
 
-function buildJobLinks(keyword,location){const title=encodeURIComponent(keyword||state.domain),loc=encodeURIComponent(location||""),q=encodeURIComponent(`${keyword} ${location}`.trim()),slug=(keyword||state.domain).toLowerCase().replace(/[^a-z0-9]+/g,"-"),locationSlug=(location||"").toLowerCase().replace(/[^a-z0-9]+/g,"-");return[{name:"LinkedIn Jobs",url:`https://www.linkedin.com/jobs/search/?keywords=${title}&location=${loc}`},{name:"Indeed",url:`https://www.indeed.com/jobs?q=${q}`},{name:"Google Jobs",url:`https://www.google.com/search?q=${q}+jobs`},{name:"Glassdoor",url:`https://www.glassdoor.co.in/Job/jobs.htm?sc.keyword=${title}&locKeyword=${loc}`},{name:"Naukri",url:locationSlug?`https://www.naukri.com/${slug}-jobs-in-${locationSlug}`:`https://www.naukri.com/${slug}-jobs`}]};
+function buildJobLinks(keyword,location){
+  const title=encodeURIComponent(keyword||state.domain),loc=encodeURIComponent(location||""),q=encodeURIComponent(`${keyword} ${location}`.trim()),slug=(keyword||state.domain).toLowerCase().replace(/[^a-z0-9]+/g,"-"),locationSlug=(location||"").toLowerCase().replace(/[^a-z0-9]+/g,"-");
+  return[
+    {name:"LinkedIn Jobs",url:`https://www.linkedin.com/jobs/search/?keywords=${title}&location=${loc}`},
+    {name:"Indeed",url:`https://www.indeed.com/jobs?q=${q}&l=${loc}`},
+    {name:"Google Jobs",url:`https://www.google.com/search?q=${q}+jobs`},
+    {name:"Glassdoor",url:`https://www.glassdoor.co.in/Job/jobs.htm?sc.keyword=${title}&locKeyword=${loc}`},
+    {name:"Naukri",url:locationSlug?`https://www.naukri.com/${slug}-jobs-in-${locationSlug}`:`https://www.naukri.com/${slug}-jobs`}
+  ];
+}
 
 function searchJobs(){
-  if(!state.isPro){openUpgrade();return;}if(!state.resumeText){alert("Upload and analyze your resume first.");return;}
+  if(!state.isPro){openUpgrade();return;}
+  if(!state.resumeText){alert("Upload and analyze your resume first.");return;}
   const keyword=$("jobKeyword").value.trim()||state.skills.slice(0,2).join(" ")||state.domain,location=$("jobLocation").value.trim();
   if(!location){alert("Please select a location first.");$("jobLocation").focus();return;}
   const jobs=buildJobLinks(keyword,location);
-  $("jobResults").innerHTML=jobs.map(j=>`<div class="job-card"><div><h3>${esc(j.name)}</h3><p><strong>Location:</strong> ${esc(location)}</p><p>Search ${esc(keyword)} jobs in ${esc(location)} using your resume profile.</p></div><a class="primary" href="${esc(j.url)}" target="_blank" rel="noopener noreferrer">Search Jobs ↗</a></div>`).join("");}
+  $("jobResults").innerHTML=jobs.map(j=>`<div class="job-card"><div><h3>${esc(j.name)}</h3><p><strong>Location:</strong> ${esc(location)}</p><p>Search ${esc(keyword)} jobs in ${esc(location)} using your resume profile.</p></div><a class="primary" href="${esc(j.url)}" target="_blank" rel="noopener noreferrer">Search Jobs ↗</a></div>`).join("");
+}
 
-function openUpgrade(){$("upgradeModal").classList.remove("hidden");}function closeUpgrade(){$("upgradeModal").classList.add("hidden");}function activateTestPro(){state.isPro=true;localStorage.setItem("careerlab_plan","pro");updatePlanUI();closeUpgrade();alert("CareerLab Pro test mode activated.");}function updatePlanUI(){const b=$("planBadge");b.textContent=state.isPro?"PRO":"FREE";b.className=state.isPro?"plan pro":"plan free";$("upgradeBtn").textContent=state.isPro?"Pro Active":"Upgrade to Pro";}
+function populateLocations(){
+  const input=$("jobLocation");
+  const listId="careerLabLocations";
+  let datalist=document.getElementById(listId);
+  if(!datalist){datalist=document.createElement("datalist");datalist.id=listId;document.body.appendChild(datalist);}
+  datalist.innerHTML=LOCATIONS.map(x=>`<option value="${esc(x)}">`).join("");
+  input.setAttribute("list",listId);
+}
 
-function populate(){$("careerDomain").innerHTML=DOMAINS.map(d=>`<option>${esc(d)}</option>`).join("");$("careerDomain").value=state.domain;renderLearningLab();updatePlanUI();}
+function openUpgrade(){$("upgradeModal").classList.remove("hidden");}
+function closeUpgrade(){$("upgradeModal").classList.add("hidden");}
+function activateTestPro(){state.isPro=true;localStorage.setItem("careerlab_plan","pro");updatePlanUI();closeUpgrade();alert("CareerLab Pro test mode activated.");}
+function updatePlanUI(){const b=$("planBadge");b.textContent=state.isPro?"PRO":"FREE";b.className=state.isPro?"plan pro":"plan free";$("upgradeBtn").textContent=state.isPro?"Pro Active":"Upgrade to Pro";}
+
+function applyDisplayMode(mode,showNotice=true){
+  document.body.classList.remove("night-mode","reading-mode");
+  if(mode==="night")document.body.classList.add("night-mode");
+  if(mode==="reading")document.body.classList.add("reading-mode");
+  localStorage.setItem("careerlab_display_mode",mode);
+  const night=$("nightModeBtn"),reading=$("readingModeBtn");
+  night.textContent=mode==="night"?"☀️ Day Mode":"🌙 Night Mode";
+  reading.textContent=mode==="reading"?"✓ Reading Mode":"Reading Mode";
+  document.documentElement.style.colorScheme=mode==="night"?"dark":"light";
+  if(showNotice){
+    const labels={night:"Night Mode enabled for low-light use.",reading:"Reading Mode enabled with softer contrast and easier reading.",day:"Standard display mode restored."};
+    $("modeNotice").textContent=labels[mode]||labels.day;
+    $("modeNotice").classList.remove("hidden");
+    clearTimeout(window.careerLabNoticeTimer);
+    window.careerLabNoticeTimer=setTimeout(()=>$("modeNotice").classList.add("hidden"),2600);
+  }
+}
+
+function toggleNightMode(){applyDisplayMode(document.body.classList.contains("night-mode")?"day":"night");}
+function toggleReadingMode(){applyDisplayMode(document.body.classList.contains("reading-mode")?"day":"reading");}
+
+function populate(){
+  $("careerDomain").innerHTML=DOMAINS.map(d=>`<option>${esc(d)}</option>`).join("");
+  $("careerDomain").value=state.domain;
+  populateLocations();
+  renderLearningLab();
+  updatePlanUI();
+  applyDisplayMode(localStorage.getItem("careerlab_display_mode")||"day",false);
+}
 
 $("resumeFile").addEventListener("change",e=>loadResume(e.target.files[0]));
 $("deleteBtn").addEventListener("click",()=>{if(!state.resumeText)return alert("No resume is currently loaded.");if(confirm("Delete this resume session now? This clears resume text, analysis, skills and interview state."))resetResumeUI(true);});
-$("analyzeBtn").addEventListener("click",analyze);$("exploreBtn").addEventListener("click",explore);$("architectureBtn").addEventListener("click",()=>{$("exploreMode").value="project";$("exploreQuestion").value="Explain my project architecture for an interview. Separate resume evidence from generic reference architecture.";explore();});$("clearOutputBtn").addEventListener("click",()=>{$("exploreOutput").textContent="Answer cleared.";$("exploreSources").innerHTML=""});$("startInterview").addEventListener("click",startInterview);$("stopInterview").addEventListener("click",stopInterview);$("answerBtn").addEventListener("click",answerInterview);$("jobSearchBtn").addEventListener("click",searchJobs);$("upgradeBtn").addEventListener("click",openUpgrade);$("pricingUpgradeBtn").addEventListener("click",openUpgrade);$("closeModal").addEventListener("click",closeUpgrade);$("activateTestPro").addEventListener("click",activateTestPro);$("careerDomain").addEventListener("change",e=>{state.domain=e.target.value;renderLearningLab();});
+$("analyzeBtn").addEventListener("click",analyze);
+$("exploreBtn").addEventListener("click",explore);
+$("architectureBtn").addEventListener("click",()=>{$("exploreMode").value="project";$("exploreQuestion").value="Explain my project architecture for an interview. Separate resume evidence from generic reference architecture.";explore();});
+$("clearOutputBtn").addEventListener("click",()=>{$("exploreOutput").innerHTML=`<div class="careerlab-answer"><div class="careerlab-answer-header"><div><div class="careerlab-brand">CareerLab Guidance</div><div class="careerlab-subtitle">Ask CareerLab a question about your resume or interview preparation.</div></div><span class="careerlab-badge">CAREERLAB</span></div><div class="careerlab-content"><p>Your CareerLab answer will appear here.</p></div></div>`;$("exploreSources").innerHTML="";});
+$("startInterview").addEventListener("click",startInterview);
+$("stopInterview").addEventListener("click",stopInterview);
+$("answerBtn").addEventListener("click",answerInterview);
+$("jobSearchBtn").addEventListener("click",searchJobs);
+$("upgradeBtn").addEventListener("click",openUpgrade);
+$("pricingUpgradeBtn").addEventListener("click",openUpgrade);
+$("closeModal").addEventListener("click",closeUpgrade);
+$("activateTestPro").addEventListener("click",activateTestPro);
+$("careerDomain").addEventListener("change",e=>{state.domain=e.target.value;renderLearningLab();});
+$("nightModeBtn").addEventListener("click",toggleNightMode);
+$("readingModeBtn").addEventListener("click",toggleReadingMode);
 populate();

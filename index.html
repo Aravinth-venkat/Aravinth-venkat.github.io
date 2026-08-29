@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f7fb">
 <title>CareerLab · Evidence-first AI Career Coach</title>
 <link rel="stylesheet" href="styles.css">
 <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
@@ -10,31 +11,54 @@
 <body>
 <header class="topbar">
   <div class="brand"><div class="logo">CL</div><div><h1>CareerLab</h1><span>Evidence-first AI Career Coach</span></div></div>
-  <div class="top-actions"><span id="planBadge" class="plan free">FREE</span><button id="upgradeBtn" class="primary">Upgrade to Pro</button></div>
+  <div class="top-actions">
+    <button id="readingModeBtn" class="mode-btn" title="Reading mode for easier reading">Reading Mode</button>
+    <button id="nightModeBtn" class="mode-btn" title="Night mode for low-light use">Night Mode</button>
+    <span id="planBadge" class="plan free">FREE</span>
+    <button id="upgradeBtn" class="primary">Upgrade to Pro</button>
+  </div>
 </header>
+
+<div id="modeNotice" class="mode-notice hidden"></div>
+
 <main class="container">
-<section class="hero"><span class="eyebrow">AI CAREER PLATFORM</span><h2>Turn your resume into an interview advantage.</h2><p>Analyze your resume, understand your experience, practice interviews, identify skill gaps and discover relevant jobs.</p></section>
+<section class="hero">
+  <span class="eyebrow">AI CAREER PLATFORM</span>
+  <h2>Turn your resume into an interview advantage.</h2>
+  <p>Analyze your resume, understand your experience, practice interviews, identify skill gaps and discover relevant jobs.</p>
+</section>
+
 <section class="card resume-card">
   <div class="section-title"><div><h2>Resume</h2><p class="muted">Your resume is processed in browser memory before AI analysis.</p></div><button id="deleteBtn" class="danger secondary">Delete Resume</button></div>
   <div class="upload-area"><input id="resumeFile" type="file" accept=".pdf,.docx"><label for="resumeFile" class="upload-box"><div class="upload-icon">↑</div><strong>Upload Resume</strong><span>PDF or DOCX · Maximum 8 MB</span></label></div>
   <div id="fileStatus" class="status"><span class="dot"></span>No resume loaded</div>
 </section>
+
 <section class="grid two">
   <div class="card"><h2>Career Domain</h2><p class="muted">Choose the career area you want CareerLab to focus on.</p><select id="careerDomain"></select><button id="analyzeBtn" class="primary full">Analyze My Resume</button></div>
   <div class="card score-card"><div class="score-number" id="score">—</div><div class="score-label">Resume Readiness</div><div class="score-track"><div id="scorebar" class="score-fill"></div></div><p id="scoreReason" class="muted">Upload a resume to generate analysis.</p></div>
 </section>
+
 <section class="card">
   <div class="section-title"><div><h2>Resume Analysis</h2><p class="muted">CareerLab separates evidence from assumptions.</p></div></div>
   <div id="analysisSummary" class="analysis-output">Your resume-specific analysis will appear here.</div>
   <h3>Skills & Interview Areas</h3><div id="skillMap" class="skillmap empty">Your supported skills, evidence warnings and interview areas will appear here.</div>
 </section>
+
 <section class="card" id="experience">
   <div class="section-title"><div><h2>CareerLab Explorer</h2><p class="muted">Ask questions about your resume, skills and interview preparation.</p></div></div>
   <div class="grid two"><div><label>Mode</label><select id="exploreMode"><option value="experience">Experience</option><option value="project">Project Architecture</option><option value="forgot">I Forgot</option><option value="rewrite">Resume Rewrite</option><option value="skill_gap">Skill Gap</option><option value="general">General</option></select></div><div><label>Topic</label><input id="exploreTopic" placeholder="Example: REST Integration"></div></div>
   <label>Question</label><textarea id="exploreQuestion" rows="5" placeholder="Ask CareerLab something about your resume or interview..."></textarea>
   <div class="button-row"><button id="exploreBtn" class="primary">Ask CareerLab</button><button id="architectureBtn" class="secondary">Project Architecture</button><button id="clearOutputBtn" class="secondary">Clear</button></div>
-  <div class="answer-box" id="exploreOutput">Upload a resume and ask a question.</div><div id="exploreSources" class="sources"></div>
+  <div class="answer-box" id="exploreOutput">
+    <div class="careerlab-answer">
+      <div class="careerlab-answer-header"><div><div class="careerlab-brand">CareerLab Guidance</div><div class="careerlab-subtitle">Ask CareerLab a question about your resume or interview preparation.</div></div><span class="careerlab-badge">CAREERLAB</span></div>
+      <div class="careerlab-content"><p>Your CareerLab answer will appear here.</p></div>
+    </div>
+  </div>
+  <div id="exploreSources" class="sources"></div>
 </section>
+
 <section class="card">
   <div class="section-title"><div><h2>Mock Interview</h2><p class="muted">One question at a time. CareerLab checks your answer against your resume.</p></div><span id="interviewState" class="status">No interview running.</span></div>
   <div class="grid three"><div><label>Interview Type</label><select id="interviewType"><option>Resume Interview</option><option>Technical Interview</option><option>HR Interview</option><option>Managerial Interview</option><option>Project Interview</option><option>ServiceNow Interview</option></select></div><div><label>Difficulty</label><select id="difficulty"><option>Easy</option><option selected>Medium</option><option>Hard</option></select></div><div class="button-stack"><button id="startInterview" class="primary">Start Interview</button><button id="stopInterview" class="secondary">Stop Interview</button></div></div>
@@ -42,41 +66,28 @@
   <div class="answer-area"><textarea id="answerInput" rows="4" placeholder="Type your interview answer here..."></textarea><button id="answerBtn" class="primary">Submit Answer</button></div>
   <div class="sample-answer-card"><div class="section-title"><div><h3>Interview Answer Assistant</h3><p class="muted">CareerLab can show a safer sample answer structure when your answer needs improvement.</p></div><span class="pro-label">PRO</span></div><div id="sampleAnswer">Sample answer guidance will appear after you submit an interview answer.</div></div>
 </section>
+
 <section class="card">
   <div class="section-title"><div><h2>Learning Lab</h2><p class="muted">Personalized topics generated from your resume, skills, gaps and interview areas.</p></div></div>
   <div id="learningGrid" class="learning-grid"><div class="learning-empty">Upload and analyze your resume to build a personalized Learning Lab.</div></div>
 </section>
+
 <section class="card pro-card">
   <div class="section-title"><div><h2>Job Finder</h2><p class="muted">Find jobs related to your resume without requiring direct LinkedIn or Naukri API integration.</p></div><span class="pro-label">PRO</span></div>
-  <div class="job-search-controls">
-    <input id="jobKeyword" placeholder="Job title or skill">
-    <select id="jobLocation" aria-label="Job location">
-      <option value="">Select location</option>
-      <option>Chennai</option>
-      <option>Bengaluru</option>
-      <option>Hyderabad</option>
-      <option>Pune</option>
-      <option>Mumbai</option>
-      <option>Delhi NCR</option>
-      <option>Noida</option>
-      <option>Gurugram</option>
-      <option>Kolkata</option>
-      <option>Coimbatore</option>
-      <option>Kochi</option>
-      <option>Ahmedabad</option>
-      <option>Remote</option>
-    </select>
-    <button id="jobSearchBtn" class="primary">Find Jobs</button>
-  </div>
+  <div class="job-search-controls"><input id="jobKeyword" placeholder="Job title or skill"><input id="jobLocation" placeholder="Select a location"><button id="jobSearchBtn" class="primary">Find Jobs</button></div>
   <div id="jobResults" class="job-results"><div class="empty-job">Analyze your resume and search for relevant jobs.</div></div>
 </section>
+
 <section class="card pricing">
   <div class="section-title"><div><h2>CareerLab Plans</h2><p class="muted">Start free. Upgrade when you need advanced career preparation.</p></div></div>
   <div class="pricing-grid"><div class="price-card"><span class="plan-name">FREE</span><h2>₹0</h2><p class="muted">For getting started.</p><ul><li>Resume upload</li><li>Basic resume analysis</li><li>Resume score</li><li>Resume-based Learning Lab</li><li>Limited mock interviews</li></ul><button class="secondary full">Current Plan</button></div><div class="price-card featured"><span class="plan-name">PRO</span><h2>₹499</h2><p class="muted">Suggested monthly launch price.</p><ul><li>Everything in Free</li><li>Advanced interview coaching</li><li>Sample answer suggestions</li><li>Answer quality feedback</li><li>Project architecture</li><li>Skill-gap roadmap</li><li>Resume-based job discovery</li></ul><button id="pricingUpgradeBtn" class="primary full">Upgrade to Pro</button></div></div>
 </section>
 </main>
+
 <footer><p>CareerLab · Evidence-first AI Career Coach</p><p>Resume data stays in browser memory until the page is reloaded or the resume is deleted.</p></footer>
+
 <div id="upgradeModal" class="modal hidden"><div class="modal-box"><button id="closeModal" class="modal-close">×</button><h2>CareerLab Pro</h2><p>Pro features are currently enabled as a frontend testing mode.</p><div class="modal-feature">✓ Advanced interview coaching</div><div class="modal-feature">✓ Sample answer suggestions</div><div class="modal-feature">✓ Resume-based job discovery</div><div class="modal-feature">✓ Project architecture</div><button id="activateTestPro" class="primary full">Activate Test Pro</button></div></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
 <script src="app.js"></script>
 </body>
