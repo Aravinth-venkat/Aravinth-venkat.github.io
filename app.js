@@ -111,11 +111,14 @@ function renderLearningLab(){
 
 function updateJobDefaults(){$("jobKeyword").value=state.skills.slice(0,2).join(" ")||state.domain;}
 
-function buildJobLinks(keyword,location){const title=encodeURIComponent(keyword||state.domain),loc=encodeURIComponent(location||""),q=encodeURIComponent(`${keyword} ${location}`.trim()),slug=(keyword||state.domain).toLowerCase().replace(/[^a-z0-9]+/g,"-");return[{name:"LinkedIn Jobs",url:`https://www.linkedin.com/jobs/search/?keywords=${title}&location=${loc}`},{name:"Indeed",url:`https://www.indeed.com/jobs?q=${q}`},{name:"Google Jobs",url:`https://www.google.com/search?q=${q}+jobs`},{name:"Glassdoor",url:`https://www.glassdoor.co.in/Job/jobs.htm?sc.keyword=${title}`},{name:"Naukri",url:`https://www.naukri.com/${slug}-jobs`}];}
+function buildJobLinks(keyword,location){const title=encodeURIComponent(keyword||state.domain),loc=encodeURIComponent(location||""),q=encodeURIComponent(`${keyword} ${location}`.trim()),slug=(keyword||state.domain).toLowerCase().replace(/[^a-z0-9]+/g,"-"),locationSlug=(location||"").toLowerCase().replace(/[^a-z0-9]+/g,"-");return[{name:"LinkedIn Jobs",url:`https://www.linkedin.com/jobs/search/?keywords=${title}&location=${loc}`},{name:"Indeed",url:`https://www.indeed.com/jobs?q=${q}`},{name:"Google Jobs",url:`https://www.google.com/search?q=${q}+jobs`},{name:"Glassdoor",url:`https://www.glassdoor.co.in/Job/jobs.htm?sc.keyword=${title}&locKeyword=${loc}`},{name:"Naukri",url:locationSlug?`https://www.naukri.com/${slug}-jobs-in-${locationSlug}`:`https://www.naukri.com/${slug}-jobs`}]};
 
 function searchJobs(){
   if(!state.isPro){openUpgrade();return;}if(!state.resumeText){alert("Upload and analyze your resume first.");return;}
-  const keyword=$("jobKeyword").value.trim()||state.skills.slice(0,2).join(" ")||state.domain,location=$("jobLocation").value.trim();const jobs=buildJobLinks(keyword,location);$("jobResults").innerHTML=jobs.map(j=>`<div class="job-card"><div><h3>${esc(j.name)}</h3><p>Search ${esc(keyword)} ${location?`in ${esc(location)}`:""} using your resume profile.</p></div><a class="primary" href="${esc(j.url)}" target="_blank" rel="noopener noreferrer">Search Jobs ↗</a></div>`).join("");}
+  const keyword=$("jobKeyword").value.trim()||state.skills.slice(0,2).join(" ")||state.domain,location=$("jobLocation").value.trim();
+  if(!location){alert("Please select a location first.");$("jobLocation").focus();return;}
+  const jobs=buildJobLinks(keyword,location);
+  $("jobResults").innerHTML=jobs.map(j=>`<div class="job-card"><div><h3>${esc(j.name)}</h3><p><strong>Location:</strong> ${esc(location)}</p><p>Search ${esc(keyword)} jobs in ${esc(location)} using your resume profile.</p></div><a class="primary" href="${esc(j.url)}" target="_blank" rel="noopener noreferrer">Search Jobs ↗</a></div>`).join("");}
 
 function openUpgrade(){$("upgradeModal").classList.remove("hidden");}function closeUpgrade(){$("upgradeModal").classList.add("hidden");}function activateTestPro(){state.isPro=true;localStorage.setItem("careerlab_plan","pro");updatePlanUI();closeUpgrade();alert("CareerLab Pro test mode activated.");}function updatePlanUI(){const b=$("planBadge");b.textContent=state.isPro?"PRO":"FREE";b.className=state.isPro?"plan pro":"plan free";$("upgradeBtn").textContent=state.isPro?"Pro Active":"Upgrade to Pro";}
 

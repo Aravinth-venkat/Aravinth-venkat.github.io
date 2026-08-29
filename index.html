@@ -48,7 +48,26 @@
 </section>
 <section class="card pro-card">
   <div class="section-title"><div><h2>Job Finder</h2><p class="muted">Find jobs related to your resume without requiring direct LinkedIn or Naukri API integration.</p></div><span class="pro-label">PRO</span></div>
-  <div class="job-search-controls"><input id="jobKeyword" placeholder="Job title or skill"><input id="jobLocation" placeholder="Location e.g. Chennai"><button id="jobSearchBtn" class="primary">Find Jobs</button></div>
+  <div class="job-search-controls">
+    <input id="jobKeyword" placeholder="Job title or skill">
+    <select id="jobLocation" aria-label="Job location">
+      <option value="">Select location</option>
+      <option>Chennai</option>
+      <option>Bengaluru</option>
+      <option>Hyderabad</option>
+      <option>Pune</option>
+      <option>Mumbai</option>
+      <option>Delhi NCR</option>
+      <option>Noida</option>
+      <option>Gurugram</option>
+      <option>Kolkata</option>
+      <option>Coimbatore</option>
+      <option>Kochi</option>
+      <option>Ahmedabad</option>
+      <option>Remote</option>
+    </select>
+    <button id="jobSearchBtn" class="primary">Find Jobs</button>
+  </div>
   <div id="jobResults" class="job-results"><div class="empty-job">Analyze your resume and search for relevant jobs.</div></div>
 </section>
 <section class="card pricing">
