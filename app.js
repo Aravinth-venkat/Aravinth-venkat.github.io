@@ -206,25 +206,60 @@ function activateTestPro(){state.isPro=true;localStorage.setItem("careerlab_plan
 function updatePlanUI(){const b=$("planBadge");b.textContent=state.isPro?"PRO":"FREE";b.className=state.isPro?"plan pro":"plan free";$("upgradeBtn").textContent=state.isPro?"Pro Active":"Upgrade to Pro";}
 
 function applyDisplayMode(mode,showNotice=true){
-  document.body.classList.remove("night-mode","reading-mode");
-  if(mode==="night")document.body.classList.add("night-mode");
-  if(mode==="reading")document.body.classList.add("reading-mode");
-  localStorage.setItem("careerlab_display_mode",mode);
-  const night=$("nightModeBtn"),reading=$("readingModeBtn");
-  night.textContent=mode==="night"?"☀️ Day Mode":"🌙 Night Mode";
-  reading.textContent=mode==="reading"?"✓ Reading Mode":"Reading Mode";
-  document.documentElement.style.colorScheme=mode==="night"?"dark":"light";
-  if(showNotice){
-    const labels={night:"Night Mode enabled for low-light use.",reading:"Reading Mode enabled with softer contrast and easier reading.",day:"Standard display mode restored."};
-    $("modeNotice").textContent=labels[mode]||labels.day;
+  if(!["day","night","reading"].includes(mode)) mode="day";
+
+  const root=document.documentElement;
+  const body=document.body;
+
+  root.classList.remove("careerlab-night","careerlab-reading");
+  body.classList.remove("night-mode","reading-mode");
+
+  if(mode==="night"){
+    root.classList.add("careerlab-night");
+    body.classList.add("night-mode");
+  }else if(mode==="reading"){
+    root.classList.add("careerlab-reading");
+    body.classList.add("reading-mode");
+  }
+
+  try{localStorage.setItem("careerlab_display_mode",mode);}catch(e){}
+
+  const night=$("nightModeBtn");
+  const reading=$("readingModeBtn");
+  const floatingNight=$("floatingNightBtn");
+  const floatingReading=$("floatingReadingBtn");
+
+  if(night) night.textContent=mode==="night"?"☀️ Day Mode":"🌙 Night Mode";
+  if(reading) reading.textContent=mode==="reading"?"✓ Reading Mode":"📖 Reading Mode";
+  if(floatingNight) floatingNight.textContent=mode==="night"?"☀️ Day":"🌙 Night";
+  if(floatingReading) floatingReading.textContent=mode==="reading"?"✓ Reading":"📖 Reading";
+
+  root.style.colorScheme=mode==="night"?"dark":"light";
+
+  if(showNotice && $("modeNotice")){
+    const labels={
+      night:"Night Mode enabled for low-light use.",
+      reading:"Reading Mode enabled for easier reading.",
+      day:"Standard display mode restored."
+    };
+    $("modeNotice").textContent=labels[mode];
     $("modeNotice").classList.remove("hidden");
     clearTimeout(window.careerLabNoticeTimer);
-    window.careerLabNoticeTimer=setTimeout(()=>$("modeNotice").classList.add("hidden"),2600);
+    window.careerLabNoticeTimer=setTimeout(
+      ()=>$("modeNotice").classList.add("hidden"),2600
+    );
   }
 }
 
-function toggleNightMode(){applyDisplayMode(document.body.classList.contains("night-mode")?"day":"night");}
-function toggleReadingMode(){applyDisplayMode(document.body.classList.contains("reading-mode")?"day":"reading");}
+function toggleNightMode(){
+  const current=document.documentElement.classList.contains("careerlab-night")?"night":"day";
+  applyDisplayMode(current==="night"?"day":"night");
+}
+
+function toggleReadingMode(){
+  const current=document.documentElement.classList.contains("careerlab-reading")?"reading":"day";
+  applyDisplayMode(current==="reading"?"day":"reading");
+}
 
 function populate(){
   $("careerDomain").innerHTML=DOMAINS.map(d=>`<option>${esc(d)}</option>`).join("");
@@ -232,7 +267,9 @@ function populate(){
   populateLocations();
   renderLearningLab();
   updatePlanUI();
-  applyDisplayMode(localStorage.getItem("careerlab_display_mode")||"day",false);
+  let savedDisplayMode="day";
+  try{savedDisplayMode=localStorage.getItem("careerlab_display_mode")||"day";}catch(e){}
+  applyDisplayMode(savedDisplayMode,false);
 }
 
 $("resumeFile").addEventListener("change",e=>loadResume(e.target.files[0]));
@@ -252,4 +289,6 @@ $("activateTestPro").addEventListener("click",activateTestPro);
 $("careerDomain").addEventListener("change",e=>{state.domain=e.target.value;renderLearningLab();});
 $("nightModeBtn").addEventListener("click",toggleNightMode);
 $("readingModeBtn").addEventListener("click",toggleReadingMode);
+$("floatingNightBtn").addEventListener("click",toggleNightMode);
+$("floatingReadingBtn").addEventListener("click",toggleReadingMode);
 populate();

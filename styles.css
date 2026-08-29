@@ -37,3 +37,158 @@ body.night-mode{--bg:#0f1117;--card:#171a22;--text:#e8ecf4;--muted:#aab2c0;--bor
 
 @media(max-width:850px){.grid.two,.grid.three,.pricing-grid,.learning-grid{grid-template-columns:1fr}.hero h2{font-size:34px}.topbar{padding:10px 4%;align-items:flex-start}.top-actions{max-width:65%;}.top-actions .primary{display:none}.job-search-controls{grid-template-columns:1fr}.answer-area{flex-direction:column}.msg{max-width:95%}.mode-btn{font-size:11px;padding:8px 10px}}
 @media(max-width:600px){.careerlab-answer-header{align-items:flex-start}.careerlab-badge{font-size:9px}.careerlab-content{padding:17px;font-size:14px}.careerlab-footer{margin:0 17px 17px}.brand span{display:none}.brand h1{font-size:17px}.logo{width:36px;height:36px}.top-actions{gap:5px}}
+
+
+/* =========================================================
+   CareerLab Display Mode Fix
+   High-specificity rules intentionally override all sections.
+   ========================================================= */
+
+.mode-floating{
+  position:fixed;
+  right:14px;
+  bottom:18px;
+  z-index:9999;
+  display:flex;
+  gap:8px;
+  padding:6px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--card);
+  box-shadow:0 8px 28px rgba(0,0,0,.16);
+}
+.mode-floating button{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:9px 12px;
+  background:var(--soft);
+  color:var(--text);
+  font:600 12px/1 Inter,system-ui,sans-serif;
+  cursor:pointer;
+}
+.mode-floating button:active{transform:scale(.98)}
+
+html.careerlab-night,
+html.careerlab-night body{
+  background:#0b0e13 !important;
+  color:#e8edf5 !important;
+}
+html.careerlab-night body .card,
+html.careerlab-night body .resume-card,
+html.careerlab-night body .topbar,
+html.careerlab-night body .hero,
+html.careerlab-night body .learning-card,
+html.careerlab-night body .job-card,
+html.careerlab-night body .careerlab-answer,
+html.careerlab-night body .msg.ai,
+html.careerlab-night body .modal-box{
+  background:#171b24 !important;
+  color:#e8edf5 !important;
+  border-color:#303747 !important;
+}
+html.careerlab-night body p,
+html.careerlab-night body .muted,
+html.careerlab-night body label,
+html.careerlab-night body span{
+  color:#aeb7c7;
+}
+html.careerlab-night body h1,
+html.careerlab-night body h2,
+html.careerlab-night body h3,
+html.careerlab-night body strong{
+  color:#f1f4f9;
+}
+html.careerlab-night body input,
+html.careerlab-night body textarea,
+html.careerlab-night body select{
+  background:#10141b !important;
+  color:#edf2f8 !important;
+  border-color:#384154 !important;
+}
+html.careerlab-night body .secondary,
+html.careerlab-night body .mode-btn,
+html.careerlab-night body .mode-floating button{
+  background:#252b38 !important;
+  color:#edf2f8 !important;
+  border-color:#414b60 !important;
+}
+html.careerlab-night body .upload-box{
+  background:#11151d !important;
+  color:#edf2f8 !important;
+  border-color:#414b60 !important;
+}
+html.careerlab-night body a{color:#aeb4ff}
+html.careerlab-night body .mode-floating{
+  background:#171b24 !important;
+  border-color:#3b4558 !important;
+}
+
+html.careerlab-reading,
+html.careerlab-reading body{
+  background:#f3efe5 !important;
+  color:#302d28 !important;
+}
+html.careerlab-reading body{
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-size:18px !important;
+  line-height:1.75 !important;
+}
+html.careerlab-reading body .topbar,
+html.careerlab-reading body button,
+html.careerlab-reading body input,
+html.careerlab-reading body textarea,
+html.careerlab-reading body select,
+html.careerlab-reading body .eyebrow,
+html.careerlab-reading body .plan,
+html.careerlab-reading body .brand{
+  font-family:Inter,system-ui,sans-serif !important;
+}
+html.careerlab-reading body .card,
+html.careerlab-reading body .resume-card,
+html.careerlab-reading body .job-card,
+html.careerlab-reading body .learning-card,
+html.careerlab-reading body .careerlab-answer{
+  background:#fbf8ef !important;
+  color:#302d28 !important;
+  border-color:#d8cfbe !important;
+  box-shadow:none !important;
+}
+html.careerlab-reading body p,
+html.careerlab-reading body .muted,
+html.careerlab-reading body label,
+html.careerlab-reading body span{
+  color:#5f584f;
+}
+html.careerlab-reading body h1,
+html.careerlab-reading body h2,
+html.careerlab-reading body h3,
+html.careerlab-reading body strong{
+  color:#28251f;
+}
+html.careerlab-reading body input,
+html.careerlab-reading body textarea,
+html.careerlab-reading body select{
+  background:#fffdf7 !important;
+  color:#302d28 !important;
+  border-color:#cfc5b3 !important;
+}
+html.careerlab-reading body .mode-floating{
+  background:#fbf8ef !important;
+  border-color:#d0c6b5 !important;
+}
+html.careerlab-reading body .mode-floating button{
+  background:#f0eadf !important;
+  color:#302d28 !important;
+  border-color:#d0c6b5 !important;
+}
+
+@media(max-width:600px){
+  .mode-floating{
+    right:10px;
+    bottom:12px;
+  }
+  .mode-floating button{
+    padding:8px 10px;
+    font-size:11px;
+  }
+}

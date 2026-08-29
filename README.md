@@ -68,3 +68,10 @@ Night Mode changes the whole interface to a dark, low-light friendly theme.
 Reading Mode uses warmer colors, softer contrast, larger typography and more relaxed line spacing. It is intended to make longer CareerLab explanations easier to read.
 
 This is a comfort feature, not medical eye-care treatment. If the user experiences persistent eye pain, headaches or vision problems, they should take breaks and consult an eye-care professional.
+
+
+DISPLAY MODE FIX
+- This version adds floating Reading and Night buttons so the controls remain visible on mobile.
+- Modes use both html and body classes with high-specificity CSS.
+- Preferences are saved in localStorage.
+- After deploying, hard-refresh the site or open it in a private/incognito tab once to avoid an old cached CSS/JS file.
