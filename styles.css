@@ -49,3 +49,8 @@
 .timer-text{font-size:12px;color:var(--muted);text-align:center;min-height:18px}
 .auth-footer-note{margin-top:16px}
 @media(max-width:560px){.auth-tabs{grid-template-columns:1fr 1fr}.confirm-panel{grid-template-columns:38px 1fr}}
+
+/* Controlled account/pro journey */
+.account-area.hidden { display:none !important; }
+.pro-attention { animation: proPulse 0.9s ease-in-out 2; }
+@keyframes proPulse { 50% { transform: translateY(-2px); box-shadow: 0 0 0 4px rgba(91,92,246,.16); } }
