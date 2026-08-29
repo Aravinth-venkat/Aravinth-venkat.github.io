@@ -1,65 +1,109 @@
-# CareerLab authentication + plans + payments
+# CareerLab complete SaaS flow
 
-This pack adds:
-- Email/password sign up and sign in
-- Google and GitHub sign-in
+This package is a complete frontend + Cloudflare Worker + Supabase schema foundation for:
+
+Landing → Try CareerLab → Limited visitor access → Sign in → Free dashboard → Feature usage → Pro trigger → Subscription → Payment status → Pro dashboard
+
+## Included
+- Visitor trial limits before sign-in
+- Email/password sign-up and sign-in
+- Phone number OTP sign-in
+- Forgot-password email flow
 - Magic-link sign-in
-- Account display and sign out
-- Admin-only feature flags
-- Free/Pro UI hidden by default until the admin enables plans
-- Razorpay payment order + server-side signature verification foundation
-- Payment tracking tables and admin dashboard
+- Google, GitHub and Microsoft OAuth buttons
+- Admin-controlled Free/Pro visibility and feature flags
+- Daily Free limits and Pro access checks on the backend
+- Razorpay secure server-created orders
+- UPI-enabled Razorpay Checkout (UPI Intent / QR availability depends on your Razorpay account configuration)
+- Server-side payment signature verification
+- Server-side payment capture check before Pro activation
+- Razorpay webhook verification and automated Pro activation
+- Payment receipt number tracking
+- Optional receipt email via Resend
+- Optional receipt SMS via Twilio
+- Admin payment tracking dashboard
+- New-feature-unlocked toast notifications
+- English voice-to-text for interview answers using browser SpeechRecognition
+- Night Mode and Reading Mode
+- Resume analysis, Explorer, Mock Interview, Learning Lab and Job Finder flow
+- No Mermaid diagram in the user experience
+- CareerLab-branded guidance output
 
 ## 1. Supabase
-Create a Supabase project and enable Email, Google and GitHub providers. Supabase supports password auth and OAuth providers.
-Run `supabase/schema.sql` in the SQL Editor.
-Put your project URL and publishable key into `app-config.js`.
+Create a Supabase project, enable Email, Phone and the OAuth providers you want, then run `supabase/schema.sql`.
 
-## 2. Cloudflare Worker secrets
-Keep these only in Worker secrets:
-SUPABASE_URL
-SUPABASE_PUBLISHABLE_KEY
-SUPABASE_SECRET_KEY
-ADMIN_EMAILS=your-admin-email@example.com
-RAZORPAY_KEY_ID
-RAZORPAY_KEY_SECRET
-RAZORPAY_WEBHOOK_SECRET
+Set in `app-config.js`:
+- SUPABASE_URL
+- SUPABASE_PUBLISHABLE_KEY
 
-Do NOT put the Razorpay secret or Supabase secret key in GitHub/frontend code.
+Configure the redirect URL for your deployed site, for example:
+`https://YOUR-GITHUB-USERNAME.github.io/YOUR-REPO/auth.html`
 
-## 3. Worker
-Merge the account/payment endpoint extension into the existing `worker/worker.js`. The existing AI routes must remain unchanged.
-Required routes:
-GET /config
-GET /me
-GET/POST /admin/config
-GET /admin/payments
-POST /payment/order
-POST /payment/verify
-POST /payment/webhook
+## 2. Worker secrets
+Set these in Cloudflare Worker secrets/variables:
+- OPENAI_API_KEY
+- SUPABASE_URL
+- SUPABASE_PUBLISHABLE_KEY
+- SUPABASE_SECRET_KEY
+- ADMIN_EMAILS
+- RAZORPAY_KEY_ID
+- RAZORPAY_KEY_SECRET
+- RAZORPAY_WEBHOOK_SECRET
 
-## 4. Frontend
-Add these files to the GitHub Pages root:
-app-config.js
-auth.html
-auth.js
-account.js
-admin.html
-admin.js
+Optional receipt delivery:
+- RESEND_API_KEY
+- RECEIPT_FROM
+- TWILIO_ACCOUNT_SID
+- TWILIO_AUTH_TOKEN
+- TWILIO_FROM
 
-Then update index.html to load Supabase + app-config.js before app.js and account.js after app.js. Add `id="accountArea"` to the topbar.
-Load Razorpay checkout on the main page with:
-https://checkout.razorpay.com/v1/checkout.js
+Never put RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET, SUPABASE_SECRET_KEY, Resend secret or Twilio auth token in GitHub frontend files.
 
-## 5. Plan behavior
-Default is intentionally simple:
-- plans_enabled=false
-- no FREE badge
-- no PRO badge
-- no upgrade prompts
-- no plan gating
+## 3. Razorpay payment setup
+CareerLab creates the Razorpay order on the server, sends the order ID to Checkout, verifies the returned signature on the server, checks the Razorpay payment is actually captured, and only then grants Pro.
 
-When you switch “Show Free & Pro plans” ON in Admin, the plan UI and Pro controls appear.
+Configure the webhook URL as:
+`https://YOUR-WORKER-DOMAIN/payment/webhook`
 
-## 6. Razorpay
-Create the order on the server, open checkout in the browser, verify the signature on the server, and only then mark the user Pro. Configure a Razorpay webhook to the Worker `/payment/webhook` endpoint. Never expose the Key Secret in frontend code.
+Subscribe to payment events including `payment.captured`, `payment.failed`, and `order.paid`.
+
+Razorpay Standard Checkout handles the available payment methods configured for your account. UPI Intent and UPI QR are the current UPI paths; do not build a manual UPI Collect flow.
+
+## 4. Admin flow
+Open `admin.html` using an account whose email is in `ADMIN_EMAILS`.
+
+You can turn on:
+- Free/Pro plan visibility
+- Feature availability
+- Visitor trial limit
+- Free daily Explorer limit
+- Free daily Mock Interview limit
+- Visitor sign-in trigger
+- Pro price
+
+Users do not see Free/Pro labels until the administrator enables the plan system.
+
+## 5. GitHub Pages
+Upload all frontend files to the repository root:
+- index.html
+- styles.css
+- app.js
+- account.js
+- auth.html
+- auth.js
+- admin.html
+- admin.js
+- app-config.js
+- privacy.html
+- .nojekyll
+
+Deploy the Worker separately with `worker/worker.js` and `worker/wrangler.jsonc`.
+
+## 6. Important production notes
+- Test Supabase OAuth providers and phone OTP before launch.
+- Test Razorpay in Test Mode before using Live Mode.
+- Do not grant Pro from a frontend success message alone.
+- The Worker verifies the payment signature and then checks the payment state before activation.
+- The webhook is also verified so late/asynchronous payment events can activate Pro.
+- Receipt email/SMS delivery is best-effort and is recorded in `careerlab_notifications`.
+- Browser speech recognition depends on the user's browser and microphone permissions; it is English-only in this implementation.
