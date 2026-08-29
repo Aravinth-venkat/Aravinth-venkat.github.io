@@ -739,59 +739,55 @@ export default {
         );
       }
 
-      const result = await env.AI.run(
-        "@cf/openai/gpt-oss-20b",
-        {
-          messages: [
-            {
-              role: "system",
-              content: SYSTEM
-            },
-            {
-              role: "user",
-              content: prompt
-            }
-          }
-        }
-      );
-
-      const answer = extractText(result);
-
-      if (!answer) {
-        return json(
-          {
-            error: "AI returned an empty response.",
-            detail: JSON.stringify(result)
-          },
-          502,
-          env,
-          origin
-        );
-      }
-
-      return json(
-        {
-          answer,
-          sources: [],
-          environment: "TESTING",
-          plan: "ALL_FEATURES_FREE"
-        },
-        200,
-        env,
-        origin
-      );
-
-    } catch (error) {
-
-      return json(
-        {
-          error: "Cloudflare AI request failed",
-          detail: String(error).slice(0, 1600)
-        },
-        500,
-        env,
-        origin
-      );
+      const result=await env.AI.run("@cf/openai/gpt-oss-20b",{
+  messages:[
+    {
+      role:"system",
+      content:SYSTEM
+    },
+    {
+      role:"user",
+      content:prompt
     }
-  }
+  ]
+});
+      const answer=extractText(result);
+
+if(!answer){
+  return json(
+    {
+      error:"AI returned an empty response.",
+      detail:JSON.stringify(result)
+    },
+    502,
+    env,
+    origin
+  );
+}
+
+return json(
+  {
+    answer,
+    sources:[],
+    environment:"TESTING",
+    plan:"ALL_FEATURES_FREE"
+  },
+  200,
+  env,
+  origin
+);
+
+}catch(error){
+  return json(
+    {
+      error:"Cloudflare AI request failed",
+      detail:String(error).slice(0,1600)
+    },
+    500,
+    env,
+    origin
+  );
+}
+
+}
 };
