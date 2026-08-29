@@ -1,119 +1,109 @@
-# CareerLab complete SaaS flow
+# CareerLab — Email Authentication Update
 
-This package is a complete frontend + Cloudflare Worker + Supabase schema foundation for:
+This package keeps CareerLab's existing product/dashboard features, but the account screen now uses **email authentication only**.
 
-Landing → Try CareerLab → Limited visitor access → Sign in → Free dashboard → Feature usage → Pro trigger → Subscription → Payment status → Pro dashboard
-
-## Included
-- Visitor trial limits before sign-in
-- Email/password sign-up and sign-in
-- Phone number OTP sign-in
+## Account features enabled
+- Email + password sign in
+- Email + password account creation
+- Supabase email confirmation
+- 30-second confirmation-email resend timer
 - Forgot-password email flow
+- Password reset page
+- Production redirect to `https://aravinth-venkat.github.io/auth.html`
+- Automatic return to CareerLab after successful authentication
+
+## Account features removed from the UI
+- Phone OTP
+- Google sign-in
+- GitHub sign-in
+- Microsoft sign-in
 - Magic-link sign-in
-- Google, GitHub and Microsoft OAuth buttons
-- Admin-controlled Free/Pro visibility and feature flags
-- Daily Free limits and Pro access checks on the backend
-- Razorpay secure server-created orders
-- UPI-enabled Razorpay Checkout (UPI Intent / QR availability depends on your Razorpay account configuration)
-- Server-side payment signature verification
-- Server-side payment capture check before Pro activation
-- Razorpay webhook verification and automated Pro activation
-- Payment receipt number tracking
-- Optional receipt email via Resend
-- Optional receipt SMS via Twilio
-- Admin payment tracking dashboard
-- New-feature-unlocked toast notifications
-- English voice-to-text for interview answers using browser SpeechRecognition
-- Night Mode and Reading Mode
-- Resume analysis, Explorer, Mock Interview, Learning Lab and Job Finder flow
-- No Mermaid diagram in the user experience
-- CareerLab-branded guidance output
 
-## 1. Supabase
-Create a Supabase project, enable Email, Phone and the OAuth providers you want, then run `supabase/schema.sql`.
+No phone/SMS/OAuth provider is required for this version.
 
-Set in `app-config.js`:
-- SUPABASE_URL
-- SUPABASE_PUBLISHABLE_KEY
+## 1. Configure Supabase
+In `app-config.js`, set the public project URL and publishable key:
 
-Configure the redirect URL for your deployed site, for example:
-`https://YOUR-GITHUB-USERNAME.github.io/YOUR-REPO/auth.html`
+```js
+window.CAREERLAB_CONFIG = {
+  AI_ENDPOINT: "https://careerlab-ai.leoaravind007.workers.dev",
+  SUPABASE_URL: "https://YOUR-PROJECT.supabase.co",
+  SUPABASE_PUBLISHABLE_KEY: "sb_publishable_YOUR_KEY"
+};
+```
 
-## 2. Worker secrets
-Set these in Cloudflare Worker secrets/variables:
-- OPENAI_API_KEY
-- SUPABASE_URL
-- SUPABASE_PUBLISHABLE_KEY
-- SUPABASE_SECRET_KEY
-- ADMIN_EMAILS
-- RAZORPAY_KEY_ID
-- RAZORPAY_KEY_SECRET
-- RAZORPAY_WEBHOOK_SECRET
+The Supabase project URL shown for the CareerLab project is:
+`https://uwebhcenkyxiktcwdgus.supabase.co`
 
-Optional receipt delivery:
-- RESEND_API_KEY
-- RECEIPT_FROM
-- TWILIO_ACCOUNT_SID
-- TWILIO_AUTH_TOKEN
-- TWILIO_FROM
+Paste your real publishable key in `app-config.js`. Do not put a Supabase secret/service-role key in GitHub Pages.
 
-Never put RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET, SUPABASE_SECRET_KEY, Resend secret or Twilio auth token in GitHub frontend files.
+## 2. Supabase email settings
+Use:
 
-## 3. Razorpay payment setup
-CareerLab creates the Razorpay order on the server, sends the order ID to Checkout, verifies the returned signature on the server, checks the Razorpay payment is actually captured, and only then grants Pro.
+- Authentication → Providers → Email: enabled
+- Authentication → URL Configuration → Site URL:
+  `https://aravinth-venkat.github.io`
+- Redirect URL:
+  `https://aravinth-venkat.github.io/auth.html`
+- Recovery redirect:
+  `https://aravinth-venkat.github.io/auth.html?mode=recovery`
 
-Configure the webhook URL as:
-`https://YOUR-WORKER-DOMAIN/payment/webhook`
+You can keep your localhost URL as an additional redirect while developing locally.
 
-Subscribe to payment events including `payment.captured`, `payment.failed`, and `order.paid`.
+## 3. Confirmation flow
 
-Razorpay Standard Checkout handles the available payment methods configured for your account. UPI Intent and UPI QR are the current UPI paths; do not build a manual UPI Collect flow.
+```text
+Visitor
+  ↓
+Try CareerLab
+  ↓
+Limited access
+  ↓
+Sign in / Create account
+  ↓
+Email + password
+  ↓
+Supabase sends confirmation email
+  ↓
+User taps Confirm email address
+  ↓
+https://aravinth-venkat.github.io/auth.html
+  ↓
+CareerLab detects the authenticated session
+  ↓
+CareerLab dashboard
+```
 
-## 4. Admin flow
-Open `admin.html` using an account whose email is in `ADMIN_EMAILS`.
+The confirmation email must no longer redirect to `http://localhost:3000` once the Supabase URL Configuration and this package are deployed.
 
-You can turn on:
-- Free/Pro plan visibility
-- Feature availability
-- Visitor trial limit
-- Free daily Explorer limit
-- Free daily Mock Interview limit
-- Visitor sign-in trigger
-- Pro price
+## 4. 30-second resend behavior
+After account creation, CareerLab shows a confirmation panel. The resend button is disabled for 30 seconds, then becomes available again.
 
-Users do not see Free/Pro labels until the administrator enables the plan system.
+The browser timer is only a user-experience control. Supabase also applies its own email/rate limits, so the application does not pretend that a message was sent when Supabase returns an error.
 
-## 5. GitHub Pages
-Upload all frontend files to the repository root:
-- index.html
-- styles.css
-- app.js
-- account.js
-- auth.html
-- auth.js
-- admin.html
-- admin.js
-- app-config.js
-- privacy.html
-- .nojekyll
+## 5. Forgot password
+The user enters their email and selects **Forgot password?**. CareerLab sends the Supabase reset email and returns to:
 
-Deploy the Worker separately with `worker/worker.js` and `worker/wrangler.jsonc`.
+`https://aravinth-venkat.github.io/auth.html?mode=recovery`
 
-## 6. Important production notes
-- Test Supabase OAuth providers and phone OTP before launch.
-- Test Razorpay in Test Mode before using Live Mode.
-- Do not grant Pro from a frontend success message alone.
-- The Worker verifies the payment signature and then checks the payment state before activation.
-- The webhook is also verified so late/asynchronous payment events can activate Pro.
-- Receipt email/SMS delivery is best-effort and is recorded in `careerlab_notifications`.
-- Browser speech recognition depends on the user's browser and microphone permissions; it is English-only in this implementation.
+The user can then set a new password.
 
-## Account page troubleshooting
-The account page intentionally does not create a Supabase client until valid public credentials are present. This prevents a blank/broken `auth.html` when `app-config.js` still has empty values.
+## 6. GitHub Pages
+Upload the frontend files from this package to the repository root. At minimum:
 
-Before testing sign-in, set `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` in `app-config.js`. In Supabase, enable the providers you want: Email, Phone/SMS, Google, GitHub and/or Azure (Microsoft). Add your exact GitHub Pages callback URLs under Authentication → URL Configuration and each provider's settings.
+- `index.html`
+- `styles.css`
+- `app.js`
+- `account.js`
+- `auth.html`
+- `auth.js`
+- `admin.html`
+- `admin.js`
+- `app-config.js`
+- `privacy.html`
+- `.nojekyll`
 
-For GitHub Pages, use the deployed origin consistently. Example:
-`https://YOUR-USERNAME.github.io/YOUR-REPO/auth.html`
+The Worker files remain under `worker/` for the existing AI/payment backend.
 
-For OAuth, the provider must also be configured in Supabase. The buttons cannot authenticate until that provider is enabled and its client credentials/callback settings are valid.
+## Security
+Only public Supabase configuration belongs in `app-config.js`. Keep server secrets such as payment secrets, Supabase secret/service-role keys, and other backend credentials out of GitHub Pages.
