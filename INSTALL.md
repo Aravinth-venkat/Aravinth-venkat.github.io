@@ -107,3 +107,13 @@ Deploy the Worker separately with `worker/worker.js` and `worker/wrangler.jsonc`
 - The webhook is also verified so late/asynchronous payment events can activate Pro.
 - Receipt email/SMS delivery is best-effort and is recorded in `careerlab_notifications`.
 - Browser speech recognition depends on the user's browser and microphone permissions; it is English-only in this implementation.
+
+## Account page troubleshooting
+The account page intentionally does not create a Supabase client until valid public credentials are present. This prevents a blank/broken `auth.html` when `app-config.js` still has empty values.
+
+Before testing sign-in, set `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` in `app-config.js`. In Supabase, enable the providers you want: Email, Phone/SMS, Google, GitHub and/or Azure (Microsoft). Add your exact GitHub Pages callback URLs under Authentication → URL Configuration and each provider's settings.
+
+For GitHub Pages, use the deployed origin consistently. Example:
+`https://YOUR-USERNAME.github.io/YOUR-REPO/auth.html`
+
+For OAuth, the provider must also be configured in Supabase. The buttons cannot authenticate until that provider is enabled and its client credentials/callback settings are valid.
