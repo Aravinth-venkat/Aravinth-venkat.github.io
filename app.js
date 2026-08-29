@@ -56,6 +56,109 @@ function resetResumeUI(full=true){
 
 function parseJson(text){try{return JSON.parse(text)}catch{}const m=String(text||"").match(/\{[\s\S]*\}/);if(!m)return null;try{return JSON.parse(m[0])}catch{return null}}
 
+function formatCareerLabAnswer(text){
+  let value=String(text||"").replace(/\r/g,"").trim();
+
+  if(!value){
+    return `
+      <div class="careerlab-answer">
+        <div class="careerlab-brand">CareerLab Guidance</div>
+        <div class="careerlab-note">CareerLab could not generate an answer. Please try again.</div>
+      </div>
+    `;
+  }
+
+  value=value
+    .replace(/```(?:markdown|md|text|json)?/gi,"")
+    .replace(/```/g,"")
+    .replace(/\*\*/g,"")
+    .replace(/__/g,"")
+    .replace(/~~/g,"")
+    .replace(/\|/g," ")
+    .replace(/^\s*[-*•]\s*/gm,"")
+    .replace(/^\s*#{1,6}\s*/gm,"")
+    .replace(/^\s*\d+\.\s+(?=[A-Z])/gm,"")
+    .replace(/[ \t]+/g," ")
+    .replace(/\n{3,}/g,"\n\n")
+    .trim();
+
+  const lines=value.split("\n");
+  let html="";
+  let paragraph=[];
+
+  function flushParagraph(){
+    if(!paragraph.length)return;
+    const p=paragraph.join(" ").trim();
+    if(p){
+      html+=`<p>${esc(p)}</p>`;
+    }
+    paragraph=[];
+  }
+
+  for(const rawLine of lines){
+    const line=rawLine.trim();
+
+    if(!line){
+      flushParagraph();
+      continue;
+    }
+
+    const headingMatch=line.match(
+      /^(What your resume proves|What this topic normally means|Simple memory explanation|How to discuss this safely in an interview|What the candidate should verify before claiming it|Example interview wording|Resume evidence|General knowledge|Safe interview explanation|Follow-up questions|Current skills|Gaps|Priority order|Learning plan|What is good|What is missing|What is unclear|Unsupported claims|How to improve|Sample answer template)\s*:?\s*$/i
+    );
+
+    if(headingMatch){
+      flushParagraph();
+      html+=`<h3>${esc(headingMatch[1])}</h3>`;
+      continue;
+    }
+
+    const numberedHeading=line.match(
+      /^\d+\.\s*(.+)$/i
+    );
+
+    if(numberedHeading && numberedHeading[1].length<100){
+      flushParagraph();
+      html+=`<h3>${esc(numberedHeading[1])}</h3>`;
+      continue;
+    }
+
+    const bullet=line.match(/^[-*•]\s*(.+)$/);
+
+    if(bullet){
+      flushParagraph();
+      html+=`<div class="careerlab-point">${esc(bullet[1])}</div>`;
+      continue;
+    }
+
+    paragraph.push(line);
+  }
+
+  flushParagraph();
+
+  return `
+    <div class="careerlab-answer">
+      <div class="careerlab-answer-header">
+        <div>
+          <div class="careerlab-brand">CareerLab Guidance</div>
+          <div class="careerlab-subtitle">Personalized guidance based on your resume</div>
+        </div>
+        <span class="careerlab-badge">CAREERLAB</span>
+      </div>
+
+      <div class="careerlab-content">
+        ${html}
+      </div>
+
+      <div class="careerlab-footer">
+        <strong>CareerLab note:</strong>
+        This guidance is generated from your resume and CareerLab's interview coaching logic.
+        Only claim experience that you can confidently explain in an interview.
+      </div>
+    </div>
+  `;
+}
+
 async function analyze(){
   if(!state.resumeText){alert("Upload a resume first.");return;}
   $("analysisSummary").textContent="Analyzing your resume…";$("analyzeBtn").disabled=true;$("analyzeBtn").textContent="Analyzing…";
