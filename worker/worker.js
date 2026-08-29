@@ -739,17 +739,13 @@ export default {
         );
       }
 
-      const result=await env.AI.run("@cf/openai/gpt-oss-20b",{
+     const result=await env.AI.run("@cf/openai/gpt-oss-20b",{
   messages:[
-    {
-      role:"system",
-      content:SYSTEM
-    },
-    {
-      role:"user",
-      content:prompt
-    }
-  ]
+    {role:"system",content:SYSTEM},
+    {role:"user",content:prompt}
+  ],
+  max_tokens:2048,
+  temperature:0.2
 });
       const answer=extractText(result);
 
