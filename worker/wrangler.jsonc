@@ -1,10 +1,7 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "careerlab-ai",
-  "main": "worker.js",
-  "compatibility_date": "2026-08-29",
-  "workers_dev": true,
-  "ai": {
-    "binding": "AI"
-  }
+  "$schema":"node_modules/wrangler/config-schema.json",
+  "name":"careerlab-ai",
+  "main":"worker.js",
+  "compatibility_date":"2026-08-30",
+  "vars":{"MODEL":"gpt-5.6","ALLOWED_ORIGIN":"*"}
 }
