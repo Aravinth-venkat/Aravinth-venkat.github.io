@@ -1,52 +1,26 @@
-# Aravinth CareerLab v3
+# CareerLab Full Resume + Learning Lab
 
-Resume-first AI career lab for GitHub Pages + Cloudflare Workers.
+This version removes the Mermaid UI and makes Learning Lab resume-driven.
 
-## Included features
+## Frontend
+- PDF/DOCX resume upload
+- Resume analysis
+- Resume score
+- Evidence warnings
+- Resume-based Learning Lab
+- Mock interview
+- Pro sample answer feedback
+- Project architecture without Mermaid output
+- Resume-based job search links
 
-- Secure server-side AI connection
-- Browser-only PDF/DOCX resume parsing
-- AI resume analysis and health score
-- Experience Explorer
-- Resume-specific interview questions
-- Interactive mock interview with follow-ups
-- Honest "I forgot this experience" coach
-- Skill-gap learning path
-- Project and architecture explanation
-- Mermaid flow/sequence diagrams
-- Current source retrieval through AI web search
-- Resume improvement/rewrite
-- Multiple career domains
-- Delete-session privacy reset
+## Backend
+- Cloudflare Worker
+- Workers AI binding `AI`
+- `@cf/meta/llama-3.1-8b-instruct` for structured resume analysis
+- `@cf/openai/gpt-oss-20b` for interview/coaching responses
 
-## Architecture
-
-GitHub Pages hosts only static files. Cloudflare Worker is the server-side AI gateway. The OpenAI API key is stored as a Cloudflare Worker secret and never placed in browser code.
-
-## GitHub Pages upload
-
-Upload the files in the root of this package to the root of your `Aravinth-venkat.github.io` repository. Keep the `worker/` folder in the repository if you want the Worker source version-controlled; GitHub Pages will simply serve the static root files.
-
-## Cloudflare Worker
-
-The Worker is deployed separately from `/worker`.
-
-Recommended build settings:
-
-- Project name: `careerlab-ai`
-- Root directory: `/worker`
-- Build command: empty
-- Deploy command: `npx wrangler deploy`
-- Non-production deploy command: `npx wrangler deploy`
-
-Required Worker secret:
-
-`OPENAI_API_KEY`
-
-The Worker config also declares this secret as required.
-
-After deployment, copy the Worker HTTPS URL and put it into `app.js` at `AI_ENDPOINT`.
-
-## Important
-
-Do not put the OpenAI API key in `app.js`, HTML, GitHub Actions, `wrangler.jsonc`, or any public repository file.
+## Deploy
+1. Deploy `worker.js` with the `AI` Workers AI binding.
+2. Use the deployed Worker URL in `app.js` as `AI_ENDPOINT`.
+3. Deploy the frontend files to GitHub Pages.
+4. Test resume upload → Analyze → Learning Lab.
