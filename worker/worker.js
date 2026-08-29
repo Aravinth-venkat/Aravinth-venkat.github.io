@@ -1,5 +1,5 @@
 const MODEL="@cf/openai/gpt-oss-20b";
-const ANALYSIS_MODEL="@cf/meta/llama-3.1-8b-instruct";
+const ANALYSIS_MODEL="@cf/openai/gpt-oss-20b";
 const CORS={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"GET,POST,OPTIONS","Access-Control-Allow-Headers":"Content-Type","Content-Type":"application/json; charset=utf-8"};
 const MAX_RESUME=30000;
 const MAX_HISTORY=10;
@@ -68,7 +68,7 @@ function analysisMessages(domain,resume){
 }
 
 async function resumeAnalysis(env,domain,resume){
-  const r=await runAI(env,analysisMessages(domain,resume),{model:ANALYSIS_MODEL,retry_model:ANALYSIS_MODEL,max_tokens:3000,retry_max_tokens:3500,temperature:0.1,response_format:{type:"json_schema",json_schema:SCHEMA}});
+  const r=await runAI(env,analysisMessages(domain,resume),{model:ANALYSIS_MODEL,retry_model:ANALYSIS_MODEL,max_tokens:6000,retry_max_tokens:6000,temperature:0.1,response_format:{type:"json_schema",json_schema:SCHEMA}});
   if(!r.answer)throw new Error("AI returned no completed content for resume analysis.");
   const p=parseJson(r.answer);
   if(!p)throw new Error("AI returned invalid JSON for resume analysis.");
