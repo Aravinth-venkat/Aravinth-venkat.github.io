@@ -1,0 +1,8 @@
+CareerLab PDF upload fix
+
+The PDF upload error "No \"GlobalWorkerOptions.workerSrc\" specified." was caused by PDF.js 4.x requiring an explicit worker URL.
+
+app.js now sets:
+pdfjs.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+
+Upload flow remains browser-local: the PDF is read in the browser and the extracted text is used for CareerLab analysis.
